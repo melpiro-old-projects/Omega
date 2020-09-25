@@ -73,10 +73,10 @@ namespace ssf {
 				if (e.text.unicode == 8)
 				{
 					
-					std::string str = ssf::Button::getString();
-					if (str.size() > 0)
+					sf::String str = ssf::Button::getString();
+					if (str.getSize() > 0)
 					{
-						str.pop_back();
+						str.erase(str.getSize() - 1);
 						ssf::Button::setString(str);
 						update();
 						return true;
@@ -84,13 +84,14 @@ namespace ssf {
 				}
 				else
 				{
-					char c = e.text.unicode;
-					ssf::Button::setString(ssf::Button::getString() + c);
+					sf::Uint32 c = e.text.unicode;
+
+					ssf::Button::setString(ssf::Button::getString() + sf::String(c));
 
 					if (m_text.getGlobalBounds().width > m_rectangle.getGlobalBounds().width - m_rectangle.getOutlineThickness() - 8)
 					{
-						std::string str = ssf::Button::getString();
-						str.pop_back();
+						sf::String str = ssf::Button::getString();
+						str.erase(str.getSize() - 1);
 						ssf::Button::setString(str);
 					}
 					else
@@ -104,13 +105,13 @@ namespace ssf {
 		return false;
 	}
 
-	void Input::setString(std::string str)
+	void Input::setString(sf::String str)
 	{
 		ssf::Text::setString(str);
 		update();
 	}
 
-	std::string Input::getString()
+	sf::String Input::getString()
 	{
 		return m_text.getString();
 	}

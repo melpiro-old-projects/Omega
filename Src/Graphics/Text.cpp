@@ -149,11 +149,6 @@ namespace ssf {
 	{
 		m_text.setString(text);
 
-		if (m_isOrigineAsCenter)
-		{
-			sf::FloatRect r = m_text.getGlobalBounds();
-			m_text.setOrigin(r.width / 2, r.height / 2);
-		}
 		if (m_isOrigineAsCenter) setOrigineAsCenter();
 	}
 	sf::String Text::getString()

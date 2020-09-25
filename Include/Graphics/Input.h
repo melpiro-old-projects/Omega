@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Button.h"
+#include <bitset>
 
 namespace ssf {
 	class Input : public ssf::Button
@@ -13,8 +14,8 @@ namespace ssf {
 
 		bool event(sf::Event e);
 
-		void setString(std::string str);
-		std::string getString();
+		void setString(sf::String str);
+		sf::String getString();
 
 		void draw();
 
