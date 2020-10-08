@@ -62,6 +62,9 @@ namespace str {
 
 	std::vector<char> toCharVector(std::string str);
 
+	std::string convert(sf::String str);
+	sf::String convert(std::string str);
+
 }
 
 namespace std {
@@ -74,6 +77,7 @@ namespace std {
 
 	float to_float(std::string str);
 	double to_double(std::string str);
+	
 }
 
 

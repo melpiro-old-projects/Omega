@@ -24,6 +24,8 @@ namespace STATIC {
 		const double PI_4 = 3.1415926535897932384626433832795 / 4.0;
 		const double DEG_RAD = 180.0 / PI;
 		const double RAD_DEG = PI / 180.0;
+
+
 	}
 
 	namespace SYS

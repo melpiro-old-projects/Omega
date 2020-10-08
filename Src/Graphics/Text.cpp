@@ -51,6 +51,8 @@ namespace ssf {
 		if (posRy == -1) m_posRy = y;
 		else m_posRy = posRy;
 
+		m_isOrigineAsCenter = centered;
+
 		if (centered)
 		{
 			// si l'objet doit etre centr�, un appel � update n'est pas n�c�saire
@@ -80,6 +82,7 @@ namespace ssf {
 		float factorY = (float)m_fen->getSize().y / STATIC::SYS::HIGHT;
 
 		m_text.setPosition(m_x + (factorX - 1) * m_posRx, m_y + (factorY - 1) * m_posRy);
+
 
 	}
 	void Text::update(float viewZoom)

@@ -52,6 +52,7 @@ namespace math {
 			}
 			double direction = getDirection(origine, destination);
 			if (origine.x > destination.x) direction += STATIC::MATH::PI;
+			if (direction < 0) direction += STATIC::MATH::PI_x2;
 			return direction;
 		}
 		template<typename T>

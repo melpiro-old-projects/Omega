@@ -370,3 +370,20 @@ double std::to_double(std::string str)
 {
 	return to_float(str);
 }
+
+std::string str::convert(sf::String str)
+{
+    auto cUtf8 = str.toUtf8(); // on convertis de l'utf 8 (encodage unicode clasique des std string)
+    std::string res="";
+    for (size_t i = 0; i < cUtf8.size(); i++)
+    {
+        res += cUtf8[i];
+    }
+    return res;
+}
+
+
+sf::String str::convert(std::string str)
+{
+	return sf::String::fromUtf8(str.begin(), str.end());
+}

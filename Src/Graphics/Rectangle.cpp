@@ -180,11 +180,11 @@ namespace ssf
 
 	bool Rectangle::clicked(sf::Event& e, float viewZoom)
 	{
-		if (e.type == sf::Event::MouseButtonReleased)
+		if (hover(viewZoom))
 		{
-			if (e.mouseButton.button == sf::Mouse::Left)
+			if (e.type == sf::Event::MouseButtonReleased)
 			{
-				if (hover(viewZoom))
+				if (e.mouseButton.button == sf::Mouse::Left)
 				{
 					return true;
 				}

@@ -76,7 +76,31 @@ namespace ssf {
 					sf::String str = ssf::Button::getString();
 					if (str.getSize() > 0)
 					{
-						str.erase(str.getSize() - 1);
+						if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
+						{
+							while (str.getSize() > 0
+								&&(str[str.getSize() - 1] == ' '
+									||str[str.getSize() - 1] == '\n'))
+							{
+								str.erase(str.getSize() - 1);
+							}
+							while (str.getSize() > 0
+								&&(str[str.getSize() - 1] != ' '
+									&&str[str.getSize() - 1] != '\n'))
+							{
+								str.erase(str.getSize() - 1);
+							}
+							while (str.getSize() > 0
+								&&(str[str.getSize() - 1] == ' '
+									||str[str.getSize() - 1] == '\n'))
+							{
+								str.erase(str.getSize() - 1);
+							}
+						}
+						else
+						{
+							str.erase(str.getSize() - 1);
+						}
 						ssf::Button::setString(str);
 						update();
 						return true;
@@ -173,7 +197,7 @@ namespace ssf {
 
 		sf::FloatRect boundText = m_text.getGlobalBounds();
 		sf::FloatRect boundRect = m_rectangle.getGlobalBounds();
-		m_cursor.setPosition(boundText.left + boundText.width + 2, boundRect.top + ssf::Button::getOutlineThickness() + 4);
+		m_cursor.setPosition(boundText.left + boundText.width + 2, boundRect.top + boundRect.height / 2.0 - ((double)m_text.getCharacterSize()) / 1.5 + 4);
 	}
 
 	void Input::setTextColor(sf::Color c)
