@@ -2,7 +2,7 @@
 
 #include "Input.h"
 #include <bitset>
-
+#include <math.h>
 namespace ssf {
 	class TextInput : public ssf::Input
 	{
@@ -26,16 +26,26 @@ namespace ssf {
 		void setString(sf::String str);
 		sf::String getString();
 
+		
+
 	protected:
 		sf::String nonModifiedString;
+		std::vector<int> indexAddedReturn;
+		int lastIndexAddedReturnSize = 0;
+		bool increaced = false;
+		bool decreaced = false;
 
 		int nbReturn = 0;
 		bool isEraseReturn = false;
+		
+		void updatePosCursor(sf::Vector2f clic);
+		void addChar(sf::Uint32 c);
+		void removeChar();
 
 	private:
-		static int give_letter_size(sf::Uint32 &letter, sf::Font &font, int font_size);
-		static sf::String ready_text(sf::String text, int width, int font_size, sf::Font &font);
-		
+		static int give_letter_size(const sf::Uint32 &letter, const sf::Font &font,const int& font_size);
+		sf::String ready_text(sf::String text, int width, const int& font_size, const sf::Font &font);
+		int getCursorPosInNonModifiedString();
 	};
 }
 

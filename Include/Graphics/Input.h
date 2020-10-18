@@ -40,6 +40,8 @@ namespace ssf {
 
 		bool m_haveFocus;
 
+		int m_cusorIndex = 0;
+
 		sf::RectangleShape m_cursor;
 
 	};
