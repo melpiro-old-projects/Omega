@@ -32,8 +32,8 @@ namespace ssf {
 		sf::String nonModifiedString;
 		std::vector<int> indexAddedReturn;
 		int lastIndexAddedReturnSize = 0;
-		bool increaced = false;
-		bool decreaced = false;
+		int increaced = 0;
+		int decreaced = 0;
 
 		int nbReturn = 0;
 		bool isEraseReturn = false;
@@ -41,6 +41,7 @@ namespace ssf {
 		void updatePosCursor(sf::Vector2f clic);
 		void addChar(sf::Uint32 c);
 		void removeChar();
+		void removeWord();
 
 	private:
 		static int give_letter_size(const sf::Uint32 &letter, const sf::Font &font,const int& font_size);

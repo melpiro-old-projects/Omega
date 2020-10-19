@@ -87,7 +87,14 @@ namespace ssf {
 				std::cout << e.text.unicode <<std::endl;
 				if (e.text.unicode == 8) // effacer
 				{
-					removeChar();
+					if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)||sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
+					{
+						removeWord();
+					}
+					else
+					{
+						removeChar();
+					}
 				}
 				else
 				{
@@ -192,8 +199,8 @@ namespace ssf {
 
 	sf::String TextInput::ready_text(sf::String text, int width,const int& font_size, const sf::Font &font)
 	{
-		increaced = false;
-		decreaced = false;
+		increaced = 0;
+		decreaced = 0;
 
 		indexAddedReturn.clear();
 		int s_width = 0;
@@ -232,11 +239,11 @@ namespace ssf {
 		
 		if (lastIndexAddedReturnSize > indexAddedReturn.size())
 		{
-			decreaced = true;
+			decreaced = lastIndexAddedReturnSize-((int)indexAddedReturn.size());
 		}
 		else if (lastIndexAddedReturnSize < indexAddedReturn.size())
 		{
-			increaced = true;
+			increaced = ((int)indexAddedReturn.size())-lastIndexAddedReturnSize;
 		}
 		lastIndexAddedReturnSize = indexAddedReturn.size();
 		return text;
@@ -277,10 +284,8 @@ namespace ssf {
 				ready_text(nonModifiedString, getSize().x - ssf::Button::gR().getOutlineThickness() - 10, m_text.getCharacterSize(), *m_text.getFont())
 			);
 
-			if (increaced)
-			{
-				m_cusorIndex++;
-			}
+			m_cusorIndex+=increaced;
+			
 			
 
 			if (gT().getGlobalBounds().height + m_text.getFont()->getLineSpacing(m_text.getCharacterSize()) > Rectangle::getSize().y - 2.0 * (ssf::Button::gR().getOutlineThickness() - 2))
@@ -293,10 +298,8 @@ namespace ssf {
 					ready_text(nonModifiedString, getSize().x - ssf::Button::gR().getOutlineThickness() - 10, m_text.getCharacterSize(), *m_text.getFont())
 				);
 
-				if (decreaced)
-				{
-					m_cusorIndex--;
-				}
+				m_cusorIndex-=decreaced;
+				
 			}
 		}
 		update();
@@ -321,10 +324,56 @@ namespace ssf {
 					ready_text(nonModifiedString, getSize().x - ssf::Button::gR().getOutlineThickness() - 10, gT().getCharacterSize(), font)
 				);
 
-				if (decreaced)
+				m_cusorIndex-=decreaced;
+				
+					
+				nbReturn=0;
+				if (nonModifiedString.getSize() > 0 && nonModifiedString[nonModifiedString.getSize() - 1] == '\n') isEraseReturn = true;
+				
+				
+				isEraseReturn= false;
+			}
+		}
+		update();
+	}
+	
+	void TextInput::removeWord()
+	{
+		int posCursor = getCursorPosInNonModifiedString() - 1;//getCursorPosInNonModifiedString() - 1;
+		std::cout <<"d: "<< posCursor <<"->"<<m_cusorIndex <<std::endl;
+		if (posCursor >= 0)
+		{
+			if (nonModifiedString.getSize() > 0)
+			{
+				while (posCursor>=0 && (nonModifiedString[posCursor] == ' '||nonModifiedString[posCursor] == '\n'))
 				{
+					nonModifiedString.erase(posCursor);
+					posCursor--;
 					m_cusorIndex--;
 				}
+				while (posCursor>=0 && (nonModifiedString[posCursor] != ' '&&nonModifiedString[posCursor] != '\n'))
+				{
+					nonModifiedString.erase(posCursor);
+					posCursor--;
+					m_cusorIndex--;
+				}
+				if (posCursor + 1 < nonModifiedString.getSize() && (nonModifiedString[posCursor + 1] == ' '||nonModifiedString[posCursor+1] == ' '))
+				{
+					while (posCursor>=0 && (nonModifiedString[posCursor] == ' '||nonModifiedString[posCursor] == '\n'))
+					{
+						nonModifiedString.erase(posCursor);
+						posCursor--;
+						m_cusorIndex--;
+					}
+				}
+
+				sf::Font font = *gT().getFont();
+				ssf::Button::setString(
+					ready_text(nonModifiedString, getSize().x - ssf::Button::gR().getOutlineThickness() - 10, gT().getCharacterSize(), font)
+				);
+
+				m_cusorIndex-=decreaced;
+				
 					
 				nbReturn=0;
 				if (nonModifiedString.getSize() > 0 && nonModifiedString[nonModifiedString.getSize() - 1] == '\n') isEraseReturn = true;
