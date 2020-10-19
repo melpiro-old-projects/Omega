@@ -46,6 +46,7 @@ namespace ssf{
 		///////////////////////////////////////////////////////////////:
 		//changer le texte 
 		void setString(sf::String text);
+		void setString(sf::String text, double maxWidth);
 		sf::String getString();
 		void setCharacterSize(unsigned int value);
 
@@ -67,6 +68,8 @@ namespace ssf{
 		///////////////////////////////////////////////////////////////:
 		// origine as center
 		void setOrigineAsCenter();
+
+		static sf::String ready_text(sf::String text, int width,const int& font_size, const sf::Font &font);
 
 	protected:
 

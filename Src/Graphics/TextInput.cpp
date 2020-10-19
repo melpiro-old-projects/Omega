@@ -84,7 +84,6 @@ namespace ssf {
 			}
 			if (e.type == sf::Event::TextEntered)
 			{
-				std::cout << e.text.unicode <<std::endl;
 				if (e.text.unicode == 8) // effacer
 				{
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)||sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
@@ -123,6 +122,7 @@ namespace ssf {
 
 	void TextInput::setFocus(bool value)
 	{
+		if (value) m_cusorIndex = m_text.getString().getSize();
 		m_haveFocus = value;
 		update();
 	}
@@ -253,7 +253,6 @@ namespace ssf {
 	{
 		int posCursor = getCursorPosInNonModifiedString();//getCursorPosInNonModifiedString();
 		
-		std::cout <<"a: "<< posCursor <<"->"<<m_cusorIndex <<std::endl;
 		if (c == 13) //retour a la ligne
 		{
 			// on verifie qu'il est possible d'ajouter le retour a la ligne
@@ -303,14 +302,12 @@ namespace ssf {
 			}
 		}
 		update();
-		std::cout << nonModifiedString.toAnsiString() <<std::endl;
 	}
 
 	
 	void TextInput::removeChar()
 	{
 		int posCursor = getCursorPosInNonModifiedString() - 1;//getCursorPosInNonModifiedString() - 1;
-		std::cout <<"d: "<< posCursor <<"->"<<m_cusorIndex <<std::endl;
 		if (posCursor >= 0)
 		{
 			if (nonModifiedString.getSize() > 0)
@@ -340,7 +337,6 @@ namespace ssf {
 	void TextInput::removeWord()
 	{
 		int posCursor = getCursorPosInNonModifiedString() - 1;//getCursorPosInNonModifiedString() - 1;
-		std::cout <<"d: "<< posCursor <<"->"<<m_cusorIndex <<std::endl;
 		if (posCursor >= 0)
 		{
 			if (nonModifiedString.getSize() > 0)

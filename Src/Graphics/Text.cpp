@@ -154,6 +154,13 @@ namespace ssf {
 
 		if (m_isOrigineAsCenter) setOrigineAsCenter();
 	}
+	
+	void Text::setString(sf::String text, double maxWidth)
+	{
+		m_text.setString(ready_text(text, maxWidth, m_text.getCharacterSize(), *m_text.getFont()));
+
+		if (m_isOrigineAsCenter) setOrigineAsCenter();
+	}
 	sf::String Text::getString()
 	{
 		return m_text.getString();
@@ -177,5 +184,43 @@ namespace ssf {
 		m_isOrigineAsCenter = true;
 
 		update();
+	}
+
+	sf::String Text::ready_text(sf::String text, int width,const int& font_size, const sf::Font &font)
+	{
+		int s_width = 0;
+		int last_word = 0;
+		for(int i = 0; i < text.getSize(); i++)
+		{
+			
+			if(s_width < width)
+			{
+				if (text[i] == '\n') s_width = 0, last_word = 0;
+				else s_width += font.getGlyph(text[i], font_size, false).advance;
+
+			}
+			if(s_width >= width)
+			{
+				if (last_word == 0)
+				{
+					text.insert(i, '\n');
+					last_word = i;
+					s_width = 0;
+				}
+				else
+				{
+					text.replace(last_word, 1, "\n");
+					i = last_word;
+					last_word = 0;
+					s_width = 0;
+				}
+			}
+
+
+			if(text[i] == ' ')
+				last_word = i;
+		}
+		
+		return text;
 	}
 }

@@ -44,6 +44,11 @@ namespace ssf {
 
 		sf::RectangleShape m_cursor;
 
+		void updatePosCursor(sf::Vector2f clic);
+		void addChar(sf::Uint32 c);
+		void removeChar();
+		void removeWord();
+
 	};
 }
 

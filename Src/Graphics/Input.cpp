@@ -48,13 +48,39 @@ namespace ssf {
 		if (Button::clicked(e))
 		{
 			m_haveFocus = true;
-			updatePosCursor();
+			updatePosCursor(sf::Vector2f(e.mouseButton.x,e.mouseButton.y));
 		}
 		else if (e.type == sf::Event::MouseButtonReleased)
 		{
 			if (e.mouseButton.button == sf::Mouse::Left)
 			{
 				setFocus(false);
+			}
+		}
+		else if (e.type == sf::Event::KeyPressed)
+		{
+			if (e.key.code == sf::Keyboard::Left)
+			{
+				if (m_cusorIndex == -1)
+				{
+					if (m_text.getString().getSize() != 0)
+					{
+						m_cusorIndex = m_text.getString().getSize() - 1;
+					}
+				}
+				else
+				{
+					m_cusorIndex --;
+					if (m_cusorIndex<0) m_cusorIndex = 0;
+				}
+				updatePosCursor();
+			}
+			else if (e.key.code == sf::Keyboard::Right)
+			{
+				m_cusorIndex++;
+				if (m_cusorIndex>m_text.getString().getSize()) m_cusorIndex = m_text.getString().getSize();
+				
+				updatePosCursor();
 			}
 		}
 
@@ -72,57 +98,15 @@ namespace ssf {
 			{
 				if (e.text.unicode == 8)
 				{
-					
-					sf::String str = ssf::Button::getString();
-					if (str.getSize() > 0)
+					if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
 					{
-						if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
-						{
-							while (str.getSize() > 0
-								&&(str[str.getSize() - 1] == ' '
-									||str[str.getSize() - 1] == '\n'))
-							{
-								str.erase(str.getSize() - 1);
-							}
-							while (str.getSize() > 0
-								&&(str[str.getSize() - 1] != ' '
-									&&str[str.getSize() - 1] != '\n'))
-							{
-								str.erase(str.getSize() - 1);
-							}
-							while (str.getSize() > 0
-								&&(str[str.getSize() - 1] == ' '
-									||str[str.getSize() - 1] == '\n'))
-							{
-								str.erase(str.getSize() - 1);
-							}
-						}
-						else
-						{
-							str.erase(str.getSize() - 1);
-						}
-						ssf::Button::setString(str);
-						update();
-						return true;
+						removeWord();
 					}
+					else removeChar();
 				}
 				else
 				{
-					sf::Uint32 c = e.text.unicode;
-
-					ssf::Button::setString(ssf::Button::getString() + sf::String(c));
-
-					if (m_text.getGlobalBounds().width > m_rectangle.getGlobalBounds().width - m_rectangle.getOutlineThickness() - 8)
-					{
-						sf::String str = ssf::Button::getString();
-						str.erase(str.getSize() - 1);
-						ssf::Button::setString(str);
-					}
-					else
-					{
-						update();
-						return true;
-					}
+					addChar(e.text.unicode );
 				}
 			}
 		}
@@ -151,6 +135,7 @@ namespace ssf {
 
 	void Input::setFocus(bool value)
 	{
+		if (value) m_cusorIndex = m_text.getString().getSize();
 		m_haveFocus = value;
 		update();
 	}
@@ -194,10 +179,37 @@ namespace ssf {
 
 	void Input::updatePosCursor()
 	{
+		int nbLine = 0;
+		for (size_t i = 0; i < m_cusorIndex; i++)
+		{
+			if (m_text.getString()[i] == '\n') nbLine++;
+		}
 
-		sf::FloatRect boundText = m_text.getGlobalBounds();
-		sf::FloatRect boundRect = m_rectangle.getGlobalBounds();
-		m_cursor.setPosition(boundText.left + boundText.width + 2, boundRect.top + boundRect.height / 2.0 - ((double)m_text.getCharacterSize()) / 1.5 + 4);
+		// todo compute the + 5.0
+		if (m_text.getString().getSize() == 0)
+		{
+			m_cursor.setPosition(m_text.findCharacterPos(m_cusorIndex).x,
+				m_text.getPosition().y + 5.0
+			);
+		}
+		else if (m_cusorIndex > 0 && m_text.getString()[m_cusorIndex-1] == '\n')
+		{
+			m_cursor.setPosition(m_text.getPosition().x,
+				m_text.getPosition().y + (nbLine) * (m_text.getFont()->getLineSpacing(m_text.getCharacterSize()))  + 5.0
+			);
+		}
+		else if (m_cusorIndex == m_text.getString().getSize())
+		{
+			m_cursor.setPosition(m_text.findCharacterPos(m_cusorIndex - 1).x +  m_text.getFont()->getGlyph(m_text.getString()[m_cusorIndex - 1], m_text.getCharacterSize(), false).advance,
+				m_text.getPosition().y + (nbLine) * (m_text.getFont()->getLineSpacing(m_text.getCharacterSize()))  + 5.0
+			);
+		}
+		else
+		{
+			m_cursor.setPosition(m_text.findCharacterPos(m_cusorIndex).x,
+				m_text.getPosition().y + (nbLine) * (m_text.getFont()->getLineSpacing(m_text.getCharacterSize()))  + 5.0
+			);
+		}
 	}
 
 	void Input::setTextColor(sf::Color c)
@@ -210,6 +222,100 @@ namespace ssf {
 	{
 		Text::setCharacterSize(value);
 		m_cursor.setSize(sf::Vector2f( 1, ssf::Button::gT().getCharacterSize() ));
+	}
+
+	void Input::addChar(sf::Uint32 c)
+	{
+		sf::String string = m_text.getString();
+		
+		if (c == 13) //retour a la ligne
+		{
+			// pad de retour a al aligne !
+		}
+		else
+		{
+			if (m_text.getGlobalBounds().width + m_text.getFont()->getGlyph(c, m_text.getCharacterSize(), false).advance < m_rectangle.getGlobalBounds().width - 8.0)
+			{
+				sf::String stringCpy = string;
+				string.insert(m_cusorIndex,c);
+				m_cusorIndex++;
+			}
+		}
+		ssf::Button::setString(string);
+		update();
+	}
+
+	
+	void Input::removeChar()
+	{
+		sf::String string = m_text.getString();
+		
+		if (m_cusorIndex - 1 >= 0)
+		{
+			if (string.getSize() > 0)
+			{
+				string.erase(m_cusorIndex - 1);
+				m_cusorIndex--;
+				ssf::Button::setString(string);
+			}
+		}
+		update();
+	}
+	
+	void Input::removeWord()
+	{
+		sf::String string = m_text.getString();
+		
+		if (m_cusorIndex - 1 >= 0)
+		{
+			if (string.getSize() > 0)
+			{
+				while (m_cusorIndex - 1>=0 && (string[m_cusorIndex - 1] == ' '||string[m_cusorIndex - 1] == '\n'))
+				{
+					string.erase(m_cusorIndex - 1);
+					m_cusorIndex--;
+				}
+				while (m_cusorIndex - 1>=0 && (string[m_cusorIndex - 1] != ' '&&string[m_cusorIndex - 1] != '\n'))
+				{
+					string.erase(m_cusorIndex - 1);
+					m_cusorIndex--;
+				}
+				if (m_cusorIndex < string.getSize() && (string[m_cusorIndex] == ' '||string[m_cusorIndex] == ' '))
+				{
+					while (m_cusorIndex - 1>=0 && (string[m_cusorIndex - 1] == ' '||string[m_cusorIndex - 1] == '\n'))
+					{
+						string.erase(m_cusorIndex - 1);
+						m_cusorIndex--;
+					}
+				}
+				ssf::Button::setString(string);
+			}
+		}
+		update();
+
+	}
+
+	void Input::updatePosCursor(sf::Vector2f clic)
+	{
+		// new computation
+		sf::String text = m_text.getString();
+		sf::Vector2f clicAbsolutePos = clic - m_text.getPosition();
+		int index = text.getSize();
+		bool find = false;
+		double minDistance = 1000000000;
+		for (size_t i = 0; i < text.getSize(); i++)
+		{
+			double d = clic.x - m_text.findCharacterPos(i).x;
+			if (std::abs(d) < minDistance && std::abs(d) < m_text.getCharacterSize())
+			{
+				minDistance = std::abs(d);
+				index = i;
+				find = true;
+			}
+		
+		}
+		m_cusorIndex = index;
+		updatePosCursor();
 	}
 
 
