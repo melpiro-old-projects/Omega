@@ -1,7 +1,7 @@
 #include "TextInput.h"
 
 namespace ssf {
-	
+
 	TextInput::TextInput()
 	{
 
@@ -10,7 +10,7 @@ namespace ssf {
 	TextInput::TextInput(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered):
 		ssf::TextInput(window,"global", x, y, sizeX, sizeY, posRx, posRy, centered)
 	{
-		
+
 
 	}
 
@@ -18,7 +18,7 @@ namespace ssf {
 	TextInput::TextInput(sf::RenderWindow* window, std::string font, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered):
 		ssf::Input(window, font, x, y, sizeX, sizeY, posRx, posRy, centered)
 	{
-		
+
 	}
 
 
@@ -27,7 +27,7 @@ namespace ssf {
 	TextInput::TextInput(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, bool centered):
 		TextInput(window, x,y, sizeX, sizeY,-1,-1,centered)
 	{
-		
+
 	}
 
 	bool TextInput::event(sf::Event e)
@@ -67,7 +67,7 @@ namespace ssf {
 			{
 				m_cusorIndex++;
 				if (m_cusorIndex>m_text.getString().getSize()) m_cusorIndex = m_text.getString().getSize();
-				
+
 				updatePosCursor();
 			}
 		}
@@ -84,6 +84,7 @@ namespace ssf {
 			}
 			if (e.type == sf::Event::TextEntered)
 			{
+			    #ifdef __linx__
 				if (e.text.unicode == 8) // effacer
 				{
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)||sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
@@ -99,8 +100,24 @@ namespace ssf {
 				{
 					addChar(e.text.unicode);
 				}
-				
+				#endif // __linx__
+				#ifdef __MINGW32__
+                if (e.text.unicode == 8)
+                {
+                     removeChar();
+                }
+                else if (e.text.unicode == 127)
+                {
+                     removeWord();
+                }
+                else
+                {
+                    addChar(e.text.unicode );
+                }
+                #endif // __MINGW32__
+
 			}
+
 		}
 		return false;
 	}
@@ -207,7 +224,7 @@ namespace ssf {
 		int last_word = 0;
 		for(int i = 0; i < text.getSize(); i++)
 		{
-			
+
 			if(s_width < width)
 			{
 				if (text[i] == '\n') s_width = 0, last_word = 0;
@@ -236,7 +253,7 @@ namespace ssf {
 			if(text[i] == ' ')
 				last_word = i;
 		}
-		
+
 		if (lastIndexAddedReturnSize > indexAddedReturn.size())
 		{
 			decreaced = lastIndexAddedReturnSize-((int)indexAddedReturn.size());
@@ -252,7 +269,7 @@ namespace ssf {
 	void TextInput::addChar(sf::Uint32 c)
 	{
 		int posCursor = getCursorPosInNonModifiedString();//getCursorPosInNonModifiedString();
-		
+
 		if (c == 13) //retour a la ligne
 		{
 			// on verifie qu'il est possible d'ajouter le retour a la ligne
@@ -274,7 +291,7 @@ namespace ssf {
 		else
 		{
 			nbReturn = 0; // il y a pu de retours à la lignes ajoutés consécutivement
-			
+
 			sf::String nonModifiedStringCpy = nonModifiedString;
 			nonModifiedString.insert(posCursor,c);
 			m_cusorIndex++;
@@ -284,8 +301,8 @@ namespace ssf {
 			);
 
 			m_cusorIndex+=increaced;
-			
-			
+
+
 
 			if (gT().getGlobalBounds().height + m_text.getFont()->getLineSpacing(m_text.getCharacterSize()) > Rectangle::getSize().y - 2.0 * (ssf::Button::gR().getOutlineThickness() - 2))
 			{
@@ -298,13 +315,13 @@ namespace ssf {
 				);
 
 				m_cusorIndex-=decreaced;
-				
+
 			}
 		}
 		update();
 	}
 
-	
+
 	void TextInput::removeChar()
 	{
 		int posCursor = getCursorPosInNonModifiedString() - 1;//getCursorPosInNonModifiedString() - 1;
@@ -314,26 +331,26 @@ namespace ssf {
 			{
 				nonModifiedString.erase(posCursor);
 				m_cusorIndex--;
-				
-			
+
+
 				sf::Font font = *gT().getFont();
 				ssf::Button::setString(
 					ready_text(nonModifiedString, getSize().x - ssf::Button::gR().getOutlineThickness() - 10, gT().getCharacterSize(), font)
 				);
 
 				m_cusorIndex-=decreaced;
-				
-					
+
+
 				nbReturn=0;
 				if (nonModifiedString.getSize() > 0 && nonModifiedString[nonModifiedString.getSize() - 1] == '\n') isEraseReturn = true;
-				
-				
+
+
 				isEraseReturn= false;
 			}
 		}
 		update();
 	}
-	
+
 	void TextInput::removeWord()
 	{
 		int posCursor = getCursorPosInNonModifiedString() - 1;//getCursorPosInNonModifiedString() - 1;
@@ -369,12 +386,12 @@ namespace ssf {
 				);
 
 				m_cusorIndex-=decreaced;
-				
-					
+
+
 				nbReturn=0;
 				if (nonModifiedString.getSize() > 0 && nonModifiedString[nonModifiedString.getSize() - 1] == '\n') isEraseReturn = true;
-				
-				
+
+
 				isEraseReturn= false;
 			}
 		}
@@ -412,7 +429,7 @@ namespace ssf {
 				break;
 
 			}
-			
+
 			if (text[i] == '\n') acualLineExplo++;
 		}
 		m_cusorIndex = index;

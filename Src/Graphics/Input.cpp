@@ -1,7 +1,7 @@
 #include "Input.h"
 
 namespace ssf {
-	
+
 	Input::Input()
 	{
 
@@ -10,7 +10,7 @@ namespace ssf {
 	Input::Input(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered):
 		ssf::Input(window,"global", x, y, sizeX, sizeY, posRx, posRy, centered)
 	{
-		
+
 
 	}
 
@@ -79,7 +79,7 @@ namespace ssf {
 			{
 				m_cusorIndex++;
 				if (m_cusorIndex>m_text.getString().getSize()) m_cusorIndex = m_text.getString().getSize();
-				
+
 				updatePosCursor();
 			}
 		}
@@ -96,6 +96,7 @@ namespace ssf {
 			}
 			if (e.type == sf::Event::TextEntered)
 			{
+			    #ifdef __linux__
 				if (e.text.unicode == 8)
 				{
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
@@ -108,6 +109,21 @@ namespace ssf {
 				{
 					addChar(e.text.unicode );
 				}
+				#endif // __linux__
+				#ifdef __MINGW32__
+				if (e.text.unicode == 8)
+				{
+					 removeChar();
+				}
+				else if (e.text.unicode == 127)
+				{
+					 removeWord();
+				}
+				else
+				{
+					addChar(e.text.unicode );
+				}
+				#endif // __MINGW32__
 			}
 		}
 		return false;
@@ -227,7 +243,7 @@ namespace ssf {
 	void Input::addChar(sf::Uint32 c)
 	{
 		sf::String string = m_text.getString();
-		
+
 		if (c == 13) //retour a la ligne
 		{
 			// pad de retour a al aligne !
@@ -245,11 +261,11 @@ namespace ssf {
 		update();
 	}
 
-	
+
 	void Input::removeChar()
 	{
 		sf::String string = m_text.getString();
-		
+
 		if (m_cusorIndex - 1 >= 0)
 		{
 			if (string.getSize() > 0)
@@ -261,11 +277,11 @@ namespace ssf {
 		}
 		update();
 	}
-	
+
 	void Input::removeWord()
 	{
 		sf::String string = m_text.getString();
-		
+
 		if (m_cusorIndex - 1 >= 0)
 		{
 			if (string.getSize() > 0)
@@ -312,7 +328,7 @@ namespace ssf {
 				index = i;
 				find = true;
 			}
-		
+
 		}
 		m_cusorIndex = index;
 		updatePosCursor();
