@@ -413,7 +413,7 @@ namespace ssf {
 			if (acualLineExplo == line)
 			{
 				double d = clic.x - m_text.findCharacterPos(i).x;
-				if (std::abs(d) < minDistance && std::abs(d) < m_text.getCharacterSize())
+				if (std::abs(d) < minDistance && std::abs(d) < m_text.getFont()->getGlyph(m_text.getString()[i], m_text.getCharacterSize(), false).advance)
 				{
 					minDistance = std::abs(d);
 					index = i;

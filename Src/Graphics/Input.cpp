@@ -321,14 +321,16 @@ namespace ssf {
 		double minDistance = 1000000000;
 		for (size_t i = 0; i < text.getSize(); i++)
 		{
+			
 			double d = clic.x - m_text.findCharacterPos(i).x;
-			if (std::abs(d) < minDistance && std::abs(d) < m_text.getCharacterSize())
+			
+			if (std::abs(d) < minDistance && std::abs(d) < m_text.getFont()->getGlyph(m_text.getString()[i], m_text.getCharacterSize(), false).advance)
 			{
 				minDistance = std::abs(d);
 				index = i;
 				find = true;
 			}
-
+		
 		}
 		m_cusorIndex = index;
 		updatePosCursor();
