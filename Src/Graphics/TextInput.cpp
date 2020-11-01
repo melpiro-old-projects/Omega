@@ -84,7 +84,7 @@ namespace ssf {
 			}
 			if (e.type == sf::Event::TextEntered)
 			{
-			    #ifdef __linx__
+			    #ifdef __linux__
 				if (e.text.unicode == 8) // effacer
 				{
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)||sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
@@ -100,7 +100,7 @@ namespace ssf {
 				{
 					addChar(e.text.unicode);
 				}
-				#endif // __linx__
+				#endif // __linux__
 				#ifdef __MINGW32__
                 if (e.text.unicode == 8)
                 {

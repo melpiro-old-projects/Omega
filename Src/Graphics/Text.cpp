@@ -81,6 +81,7 @@ namespace ssf {
 		float factorX = (float)m_fen->getSize().x / STATIC::SYS::WIDTH;
 		float factorY = (float)m_fen->getSize().y / STATIC::SYS::HIGHT;
 
+
 		m_text.setPosition(m_x + (factorX - 1) * m_posRx, m_y + (factorY - 1) * m_posRy);
 
 
