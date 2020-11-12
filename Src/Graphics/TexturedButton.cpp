@@ -1,47 +1,70 @@
-#include "TexturedButton.h"
+#include "Graphics/TexturedButton.h"
 
 
-namespace ssf {
+namespace O{
+namespace graphics {
 	TexturedButton::TexturedButton()
 	{
-		ssf::Text::setOrigineAsCenter();
+		graphics::Text::setOrigineAsCenter();
 	}
 
-	TexturedButton::TexturedButton(sf::RenderWindow* fen,std::string local, float x, float y, float posRx, float posRy, bool centered) :
+	TexturedButton::TexturedButton(sf::RenderWindow* fen, std::string textureName, std::string fontName, float x, float y, float posRx, float posRy, bool centered) :
 		m_fen(fen),
-		Sprite(fen, local, x, y, posRx, posRy, centered),
-		Text(fen, x, y, 0, 0, true)// le texte est toujour centré !
+		Sprite(fen, textureName, x, y, posRx, posRy, centered),
+		Text(fen, fontName, x, y, 0, 0, true)// le texte est toujour centrï¿½ !
 	{
 		m_rectB = sf::IntRect(-1, -1, -1, -1);
 		m_rectHover = sf::IntRect(-1, -1, -1, -1);
+
+		if (centered) setOrigineAsCenter();
+		else update();
 	}
 
-	TexturedButton::TexturedButton(sf::RenderWindow* window, std::string local, float x, float y, bool centered):
-		TexturedButton(window, local, x, y, -1, -1, centered)
+	TexturedButton::TexturedButton(sf::RenderWindow* fen, std::string textureName, std::string fontName, float x, float y, bool centered):
+		TexturedButton(fen, textureName, fontName, x, y, 0, 0, centered)
 	{
 
 	}
 
-	void TexturedButton::loadTexture()
+	void TexturedButton::loadRessources()
 	{
 		Sprite::loadTexture();
+		Text::loadFont();
 
 		if (m_rectB.height == -1 && m_rectB.width == -1)
 			calcNoRectHover();
 
 	}
-	void TexturedButton::loadTexture(sf::Texture& tex)
+	void TexturedButton::loadRessources(sf::Texture& tex)
 	{
 		Sprite::loadTexture(tex);
+		Text::loadFont();
+
+		if (m_rectB.height == -1 && m_rectB.width == -1) 
+			calcNoRectHover();
+	}
+	
+	void TexturedButton::loadRessources(sf::Font &font)
+	{
+		Sprite::loadTexture();
+		Text::loadFont(font);
+
+		if (m_rectB.height == -1 && m_rectB.width == -1) 
+			calcNoRectHover();
+	}
+	void TexturedButton::loadRessources(sf::Texture &tex, sf::Font &font)
+	{
+		Sprite::loadTexture(tex);
+		Text::loadFont(font);
 
 		if (m_rectB.height == -1 && m_rectB.width == -1) 
 			calcNoRectHover();
 	}
 
 
-	bool TexturedButton::hover(float viewZoom)
+	bool TexturedButton::hover()
 	{
-		bool isIn = Sprite::hover(viewZoom);
+		bool isIn = Sprite::hover();
 		if (isIn)
 		{
 			gS().setTextureRect(m_rectHover);
@@ -55,9 +78,9 @@ namespace ssf {
 		return isIn;
 	}
 
-	bool TexturedButton::clicked(sf::Event& e, float viewZoom)
+	bool TexturedButton::clicked(sf::Event& e)
 	{
-		if (hover(viewZoom))
+		if (hover())
 		{
 			if (e.type == sf::Event::MouseButtonReleased)
 			{
@@ -70,18 +93,21 @@ namespace ssf {
 	
 		return false;
 	}
+	
+	void TexturedButton::event(sf::Event e)
+	{
+		if (e.type==sf::Event::Resized)
+		{
+			TexturedButton::update();
+		}
+	}
 
 	void TexturedButton::update()
 	{
 		Sprite::update();
 		updatePosText();
 	}
-	void TexturedButton::update(float viewZoom)
-	{
-		Sprite::update(viewZoom);
-		updatePosText();
 
-	}
 
 
 	void TexturedButton::draw()
@@ -101,7 +127,7 @@ namespace ssf {
 	void TexturedButton::setPosition(float x, float y)
 	{
 		Sprite::setPosition(x, y);
-		updatePosText();
+		update();
 	}
 
 	void TexturedButton::move(float x, float y)
@@ -137,17 +163,20 @@ namespace ssf {
 
 	void TexturedButton::calcAutoRectHover()
 	{
-		sf::Vector2u size = m_texture.getSize();
+		auto b = m_sprite.getGlobalBounds();
+		sf::Vector2u size(b.width, b.height);
 		m_rectB = sf::IntRect(0, 0, size.x, size.y / 2.0);
 		m_rectHover = sf::IntRect(0, size.y / 2.0, size.x, size.y / 2.0);
 	}
 
 	void TexturedButton::calcNoRectHover()
 	{
-		sf::Vector2u size = m_texture.getSize();
+		auto b = m_sprite.getGlobalBounds();
+		sf::Vector2u size(b.width, b.height);
 		m_rectB = sf::IntRect(0, 0, size.x, size.y);
 		m_rectHover = sf::IntRect(0, 0, size.x, size.y);
 	}
 
 
+}
 }

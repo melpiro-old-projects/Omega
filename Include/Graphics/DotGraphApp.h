@@ -5,6 +5,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+namespace O {
+namespace graphics {
+
 class DotGraphApp
 {
 
@@ -30,7 +33,7 @@ private:
 	void update();
 	void render();
 
-	// l'ajout se fait dans un tampon updateAdd va donc prendre les élément du tampon et les mettre dans la vraie liste
+	// l'ajout se fait dans un tampon updateAdd va donc prendre les ï¿½lï¿½ment du tampon et les mettre dans la vraie liste
 	void updateAdd(std::string name, sf::Vector2f coord);
 	void updateAdd();
 
@@ -49,3 +52,4 @@ private:
 
 };
 
+}}

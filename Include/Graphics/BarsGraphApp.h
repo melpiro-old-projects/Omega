@@ -4,8 +4,9 @@
 #include <map>
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Text.h"
 
+namespace O {
+namespace graphics {
 class BarsGraphApp
 {
 
@@ -35,7 +36,7 @@ private:
 	void update();
 	void render();
 
-	// l'ajout se fait dans un tampon updateAdd va donc prendre les élément du tampon et les mettre dans la vraie liste
+	// l'ajout se fait dans un tampon updateAdd va donc prendre les ï¿½lï¿½ment du tampon et les mettre dans la vraie liste
 	void updateAdd(std::string name, double hight, sf::Color c);
 	void updateAdd();
 
@@ -57,4 +58,4 @@ private:
 
 
 };
-
+}}

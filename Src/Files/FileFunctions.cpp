@@ -1,150 +1,118 @@
-#include "FileFunctions.h"
+#include "Files/FileFunctions.h"
 
+namespace O{
+	namespace file {
+		///////////////////////////////////////////////////////////////
+		std::string readLigne(const std::string& fichier, const int& ligne)
+		{
+			std::string res("");        // resutlat final
+			std::ifstream flux(fichier);
 
-namespace file {
-	///////////////////////////////////////////////////////////////
-	std::string readLigne(std::string fichier, int ligne)
-	{
-		std::string res("");        // resutlat final
-		std::ifstream flux(fichier);
+			if (!flux.is_open())
+			{
+				std::cerr << "[O::file::readLigne] impossible d'ouvrir le fichier : "<< fichier << '\n';
+				return "";
+			}
 
-		for (int i(0); i < ligne; i++)
-		{
-			std::getline(flux, res);
+			for (int i(0); i < ligne; i++)
+			{
+				if (!std::getline(flux, res))
+				{
+					std::cerr << "[O::file::readLigne] lecture en dehors des limites du fichier "<< fichier << '\n';
+					return "";
+				}
+			}
+			flux.close();
+			
+			O::str::remplace(res, "\\n", "\n");
+			return res;
 		}
-		flux.close();
-		for (int i(0); i < res.size(); i++)
+		///////////////////////////////////////////////////////////////
+		int getNbLigne(const std::string& fichier)
 		{
-			if (res[i] == '�') res[i] = '\n';
-		}
-		return res;
-	}
-	///////////////////////////////////////////////////////////////
-	void write(std::string fichier, std::string texte)
-	{
-		std::ofstream flux(fichier.c_str(), std::ios::app);
-		flux << texte;
-		flux.close();
+			std::ifstream in(fichier, std::ios::in);
+			if (!in.is_open())
+			{
+				std::cerr << "[O::file::getNbLigne] impossible d'ouvrir le fichier : "<< fichier << '\n';
+				return 0;
+			}
 
-	}
-	///////////////////////////////////////////////////////////////
-	void write(std::string texte, int ligne, int afterNbWord)
-	{
-		std::ifstream fluxI("Data/Save/00001.save");
-		std::string result;
-		for (int i(0); i < ligne; i++)
+			std::string s;
+			int nbLignes(0);
+			while (std::getline(in, s))
+			{
+				nbLignes++;
+			}
+			in.close();
+			return nbLignes;
+		}
+		///////////////////////////////////////////////////////////////
+		void deleteContent(const std::string& fichier)
 		{
-			std::getline(fluxI, result);
+			std::ofstream flux(fichier.c_str());
+			if (!flux.is_open())
+			{
+				std::cerr << "[O::file::deleteContent] impossible d'ouvrir le fichier : "<< fichier << '\n';
+				return;
+			}
+			flux.close();
 		}
 
-		for (int i(0); i < afterNbWord; i++)
+		///////////////////////////////////////////////////////////////
+		std::vector<std::string> getAllLines(const std::string& fichier, bool indexCorelation)
 		{
-			fluxI >> result;
-		}
-		std::ofstream fluxO("Data/Save/00001.save", std::ios::app);
+			std::vector<std::string> res(0);        // resutlat final
+			if (indexCorelation) res.push_back(""); // pour décaler les index
+			std::ifstream flux(fichier);
+			if (!flux.is_open())
+			{
+				std::cerr << "[O::file::getAllLines] impossible d'ouvrir le fichier : "<< fichier << '\n';
+				return std::vector<std::string>();
+			}
 
-		fluxO.seekp(fluxI.tellg());
-		fluxO << texte;
-		fluxO.close();
-		fluxI.close();
+			std::string s;
+			while (std::getline(flux, s))
+			{
+				O::str::remplace(s, "\\n", "\n");
+				res.push_back(s);
+			}
+			flux.close();
+			return res;
+		}
+		void writeAllLinesAtEnd(const std::string& fichier, std::vector<std::string> allLines)
+		{
+			std::ofstream flux(fichier.c_str(), std::ios::app);
+			for (size_t i = 0; i < allLines.size(); i++)
+			{
+				flux << allLines[i] << '\n';
+			}
+			flux.close();
+		}
+		void writeAllLines(const std::string& fichier, std::vector<std::string> allLines)
+		{
+			std::ofstream flux(fichier.c_str());
+			for (size_t i = 0; i < allLines.size(); i++)
+			{
+				flux << allLines[i] << '\n';
+			}
+			flux.close();
+		}
 
-	}
-	///////////////////////////////////////////////////////////////
-	int getNbLigne(std::string fichier)
-	{
-		std::ifstream in(fichier, std::ios::in);
-		std::string s;
-		int nbLignes(0);
-		while (std::getline(in, s))
+		std::ifstream getReadSteam(const std::string& file)
 		{
-			nbLignes++;
+			return std::ifstream(file.c_str());
 		}
-		in.close();
-		return nbLignes;
-	}
-	///////////////////////////////////////////////////////////////
-	void deleteContent(std::string fichier)
-	{
-		std::ofstream flux(fichier.c_str());
-		flux.close();
-	}
-
-	///////////////////////////////////////////////////////////////
-	std::vector<std::string> getAllLines(std::string fichier)
-	{
-		std::vector<std::string> res(0);        // resutlat final
-		std::ifstream flux(fichier);
-		std::string s;
-		while (std::getline(flux, s))
+		std::ofstream getWriteSteam(const std::string& file)
 		{
-			res.push_back(s);
+			return std::ofstream(file.c_str());
 		}
-		flux.close();
-		return res;
-	}
-	///////////////////////////////////////////////////////////////
-	std::vector<std::string> getAllLines(std::string fichier, bool indexCorelation)
-	{
-		std::vector<std::string> res(0);        // resutlat final
-		if (indexCorelation) res.push_back(""); // pour d�caler les index
-		std::ifstream flux(fichier);
-		std::string s;
-		while (std::getline(flux, s))
+		std::ofstream getWriteSteamApp(const std::string& file)
 		{
-			res.push_back(s);
+			return std::ofstream(file.c_str(), std::ios::app);
 		}
-		flux.close();
-		return res;
-	}
-	void writeAllLines(std::string fichier, std::vector<std::string> allLines)
-	{
-		std::ofstream flux(fichier.c_str(), std::ios::app);
-		for (size_t i = 0; i < allLines.size(); i++)
+		std::ofstream getWriteSteamBinary(const std::string& file)
 		{
-			flux << allLines[i] << '\n';
+			return std::ofstream(file.c_str(), std::ios::binary);
 		}
-		flux.close();
 	}
-	///////////////////////////////////////////////////////////////
-	std::vector<std::string> getAllLinesUTF8(std::string fichier)
-	{
-		std::vector<std::string> res(0);        // resutlat final
-		res.push_back(""); // pour d�caler les index
-		std::ifstream flux(fichier);
-		std::string s;
-		while (std::getline(flux, s))
-		{
-			res.push_back(encodage::encodeToUTF32(s));
-		}
-		flux.close();
-		return res;
-	}
-	///////////////////////////////////////////////////////////////
-	std::vector<std::wstring> getAllLinesUTF8_W(std::string fichier)
-	{
-		std::vector<std::wstring> res(0); 
-		std::wifstream flux(fichier);
-		std::wstring s;
-		while (std::getline(flux, s))
-		{
-			res.push_back(encodage::encodeToUTF32(s));
-		}
-		flux.close();
-		return res;
-	}
-	///////////////////////////////////////////////////////////////
-	std::vector<std::string> getAllLinesUTF8(std::string fichier, bool indexCorelation)
-	{
-		std::vector<std::string> res(0);        // resutlat final
-		if (indexCorelation) res.push_back(""); // pour d�caler les index
-		std::ifstream flux(fichier);
-		std::string s;
-		while (std::getline(flux, s))
-		{
-			res.push_back(encodage::encodeToUTF32(s));
-		}
-		flux.close();
-		return res;
-	}
-	///////////////////////////////////////////////////////////////
 }

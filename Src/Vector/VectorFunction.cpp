@@ -1,12 +1,15 @@
 #include "VectorFunctions.h"
 
+
+namespace O{
 namespace vector {
+
 	std::vector<int> createRandomVector(int size, int min, int max)
 	{
 		std::vector<int> vec;
 		for (int i = 0; i < size; i++)
 		{
-			vec.push_back(math::randInt(min, max));
+			vec.push_back(math::rdm::randInt(min, max));
 		}
 		return vec;
 	}
@@ -15,7 +18,7 @@ namespace vector {
 		std::vector<float> vec;
 		for (int i = 0; i < size; i++)
 		{
-			vec.push_back(math::randFloat(min, max));
+			vec.push_back(math::rdm::randFloat(min, max));
 		}
 		return vec;
 	}
@@ -24,7 +27,7 @@ namespace vector {
 		std::vector<double> vec;
 		for (int i = 0; i < size; i++)
 		{
-			vec.push_back(math::randFloat(min, max));
+			vec.push_back(math::rdm::randFloat(min, max));
 		}
 		return vec;
 	}
@@ -60,7 +63,7 @@ namespace vector {
 		source.clear();
 		for (int i = 0; i < size; i++)
 		{
-			source.push_back(math::randInt(min, max));
+			source.push_back(math::rdm::randInt(min, max));
 		}
 	}
 	void initRandomVector(std::vector<float>& source, int size, float min, float max)
@@ -68,7 +71,7 @@ namespace vector {
 		source.clear();
 		for (int i = 0; i < size; i++)
 		{
-			source.push_back(math::randFloat(min, max));
+			source.push_back(math::rdm::randFloat(min, max));
 		}
 	}
 	void initRandomVector(std::vector<double>& source, int size, double min, double max)
@@ -76,7 +79,7 @@ namespace vector {
 		source.clear();
 		for (int i = 0; i < size; i++)
 		{
-			source.push_back(math::randFloat(min, max));
+			source.push_back(math::rdm::randFloat(min, max));
 		}
 	}
 	std::vector<int> toInt(std::vector<std::string> vector)
@@ -320,9 +323,6 @@ namespace vector {
 			vector::setCol(*vector, colone, i);
 		}
 	}
-	///////////////////////////////////////////////////////////////
+	
 
-
-
-
-}
+}}

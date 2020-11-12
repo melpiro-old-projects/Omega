@@ -1,40 +1,46 @@
 #pragma once
-#include "Sprite.h"
-#include "Text.h"
+#include "Graphics/Sprite.h"
+#include "Graphics/Text.h"
 #include <SFML/Graphics.hpp>
 
-namespace ssf {
-	class TexturedButton : public ssf::Sprite, public ssf::Text
+namespace O {
+namespace graphics {
+	class TexturedButton : public graphics::Sprite, public graphics::Text
 	{
 	public:
 		TexturedButton();
-		TexturedButton(sf::RenderWindow* fen, std::string local, float x, float y, float posRx = -1, float posRy = -1, bool centered = false);
-		TexturedButton(sf::RenderWindow* window, std::string local, float x = 0, float y = 0, bool centered = false);
+		TexturedButton(sf::RenderWindow* fen, std::string textureName, std::string fontName, float x = 0, float y = 0, float posRx = 0, float posRy = 0, bool centered = false);
+		TexturedButton(sf::RenderWindow* fen, std::string textureName, std::string fontName, float x, float y, bool centered);
 
 		///////////////////////////////////////////////////////////////:
-		// définition des rectangles de modifications lors du hover
+		// dï¿½finition des rectangles de modifications lors du hover
 		void setRectButton(sf::IntRect rectB, sf::IntRect rectHover);
 
-
-		///////////////////////////////////////////////////////////////:
-		// detection du passage de la souris sur le bouton
-		// pour detecter un clic il faut le coupler à sf::event
-		bool hover(float viewZoom = 1);
-
-		///////////////////////////////////////////////////////////////:
-		// détéction du clic
-		bool clicked(sf::Event &e, float viewZoom = 1);
-
-
-		///////////////////////////////////////////////////////////////:
-		// chargement des textures
-		void loadTexture();
-		void loadTexture(sf::Texture &tex);
+		void event(sf::Event e);
 
 		///////////////////////////////////////////////////////////////:
 		// updates
 		void update();
-		void update(float viewZoom);
+
+
+		///////////////////////////////////////////////////////////////:
+		// detection du passage de la souris sur le bouton
+		// pour detecter un clic il faut le coupler ï¿½ sf::event
+		bool hover();
+
+		///////////////////////////////////////////////////////////////:
+		// dï¿½tï¿½ction du clic
+		bool clicked(sf::Event &e);
+
+
+		///////////////////////////////////////////////////////////////:
+		// chargement des textures
+		void loadRessources();
+		void loadRessources(sf::Texture &tex);
+		void loadRessources(sf::Font &font);
+		void loadRessources(sf::Texture &tex, sf::Font &font);
+
+		
 
 		///////////////////////////////////////////////////////////////:
 		// affichage
@@ -72,6 +78,8 @@ namespace ssf {
 		void calcNoRectHover();
 
 	protected:
+		
+
 		///////////////////////////////////////////////////////////////:
 		// rect de modifications lors du hover ou non 
 		sf::IntRect m_rectB;
@@ -85,4 +93,4 @@ namespace ssf {
 		
 	};
 
-}
+}}

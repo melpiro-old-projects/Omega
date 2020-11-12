@@ -1,41 +1,45 @@
-#include "Button.h"
+#include "Graphics/Button.h"
 
 
-namespace ssf {
+namespace O {
+namespace graphics {
 	Button::Button()
 	{
-		ssf::Text::setOrigineAsCenter();
+		graphics::Text::setOrigineAsCenter();
 	}
 
 
-	Button::Button(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered) :
-		Button(window, "global", x,y,sizeX,sizeY, posRx, posRy, centered)
-	{
-		updatePosText();
-	}
+
 
 	Button::Button(sf::RenderWindow* window, std::string font, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered):
 		m_fen(window),
 		Rectangle(window, x, y, sizeX, sizeY, posRx, posRy, centered),
 		Text(window,font, x, y, 0, 0, true) // le texte est toujour en centered !
 	{
+		m_baseColor = sf::Color::Transparent;
+		m_hoverColor = sf::Color(255,255,255,150);
+		m_outlineBaseColor = sf::Color::White;
+		m_outlinehoverColor = sf::Color::White;
+		setOutlineThickness(1);
+		
 		updatePosText();
+
 	}
 
-	Button::Button(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, bool centered):
-		Button(window,x,y,sizeX,sizeY,-1,-1,centered)
+	Button::Button(sf::RenderWindow* window, std::string font, float x, float y, float sizeX, float sizeY, bool centered):
+		Button(window, font,x,y,sizeX,sizeY,0,0,centered)
 	{
 	
 	}
 
-	bool Button::hover(float viewZoom)
+	bool Button::hover()
 	{
-		return Rectangle::hover(viewZoom);
+		return Rectangle::hover();
 	}
 
-	bool Button::clicked(sf::Event& e, float viewZoom)
+	bool Button::clicked(sf::Event& e)
 	{
-		if (hover(viewZoom))
+		if (hover())
 		{
 			if (e.type == sf::Event::MouseButtonReleased)
 			{
@@ -55,16 +59,23 @@ namespace ssf {
 		updatePosText();
 	}
 
+	
+	void Button::event(sf::Event e)
+	{
+		if (e.type == sf::Event::Resized)
+		{
+			Button::update();
+		}
+	}
+	
+
 	void Button::update()
 	{
+		
 		Rectangle::update();
 		updatePosText();
 	}
-	void Button::update(float viewZoom)
-	{
-		Rectangle::update(viewZoom);
-		updatePosText();
-	}
+
 
 
 	void Button::draw()
@@ -108,4 +119,4 @@ namespace ssf {
 	{
 		m_text.setFillColor(c);
 	}
-}
+}}

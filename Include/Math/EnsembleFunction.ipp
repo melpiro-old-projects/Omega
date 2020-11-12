@@ -1,12 +1,19 @@
-#include "EnsembleFunctions.h"
+#include "Math/EnsembleFunctions.h"
 
-
+namespace O{
 namespace math {
+namespace set {
 
 	template<typename T>
-	std::vector<std::vector<T>> getCombinationsWithReapeat(std::vector<T> vector, int nbElements)
+	std::vector<std::vector<T>> getCombinationsWithReapeat(const std::vector<T>& vector, const int& nbElements)
 	{
-		if (nbElements <= 0) return std::vector<std::vector<T>>(0);
+		if (nbElements < 0) 
+		{
+			std::cerr << "[O::math::set::getCombinationsWithReapeat] paramètre nbMaxElements invalide ! \n";
+			return std::vector<std::vector<T>>(0);
+		}
+		if (nbElements == 0 || vector.size() == 0) return std::vector<std::vector<T>>(0);
+
 		std::vector<std::vector<T>> res;
 
 		std::vector<int> combin = vector::createVector(nbElements, 0);
@@ -40,10 +47,14 @@ namespace math {
 	}
 
 	template<typename T>
-	std::vector<std::vector<T>> getCombinations(std::vector<T> vector, int nbElements)
+	std::vector<std::vector<T>> getCombinations(const std::vector<T>& vector, const int& nbElements)
 	{
-		if (nbElements <= 0) return std::vector<std::vector<T>>(0);
-		if (nbElements > vector.size()) return std::vector<std::vector<T>>(0);
+		if (nbElements < 0 || nbElements > vector.size()) 
+		{
+			std::cerr << "[O::math::set::getCombinations] paramètre nbElements invalide ! \n";
+			return std::vector<std::vector<T>>(0);
+		}
+		if (nbElements == 0 || vector.size() == 0) return std::vector<std::vector<T>>(0);
 
 		std::vector<std::vector<T>> res;
 
@@ -78,8 +89,15 @@ namespace math {
 		}
 	}
 	template<typename T>
-	std::vector<std::vector<T>> getAllCombinationsWithReapeat(std::vector<T> vector, int nbMaxElements)
+	std::vector<std::vector<T>> getAllCombinationsWithReapeat(const std::vector<T>& vector, const int& nbMaxElements)
 	{
+		if (nbMaxElements < 0) 
+		{
+			std::cerr << "[O::math::set::getAllCombinationsWithReapeat] paramètre nbMaxElements invalide ! \n";
+			return std::vector<std::vector<T>>(0);
+		}
+		if (nbMaxElements == 0 || vector.size() == 0) return std::vector<std::vector<T>>(0);
+
 		std::vector<std::vector<T>> res(0);
 
 		for (size_t i = 1; i <= nbMaxElements; i++)
@@ -89,7 +107,7 @@ namespace math {
 		return res;
 	}
 	template<typename T>
-	std::vector<std::vector<T>> getAllCombinationsWithReapeat(std::vector<T> vector)
+	std::vector<std::vector<T>> getAllCombinationsWithReapeat(const std::vector<T>& vector)
 	{
 		std::vector<std::vector<T>> res(0);
 
@@ -100,8 +118,14 @@ namespace math {
 		return res;
 	}
 	template<typename T>
-	std::vector<std::vector<T>> getAllCombinations(std::vector<T> vector, int nbMaxElements)
+	std::vector<std::vector<T>> getAllCombinations(const std::vector<T>& vector, const int& nbMaxElements)
 	{
+		if (nbMaxElements < 0 || nbMaxElements > vector.size()) 
+		{
+			std::cerr << "[O::math::set::getAllCombinations] paramètre nbMaxElements invalide ! \n";
+			return std::vector<std::vector<T>>(0);
+		}
+		if (nbMaxElements == 0 || vector.size() == 0) return std::vector<std::vector<T>>(0);
 		std::vector<std::vector<T>> res(0);
 
 		for (size_t i = 1; i <= nbMaxElements; i++)
@@ -111,7 +135,7 @@ namespace math {
 		return res;
 	}
 	template<typename T>
-	std::vector<std::vector<T>> getAllCombinations(std::vector<T> vector)
+	std::vector<std::vector<T>> getAllCombinations(const std::vector<T>& vector)
 	{
 		std::vector<std::vector<T>> res(0);
 
@@ -122,14 +146,15 @@ namespace math {
 		return res;
 	}
 	template<typename T>
-	std::vector<std::vector<T>> getPermutations(std::vector<T> vector)
+	std::vector<std::vector<T>> getPermutations(const std::vector<T>& vector)
 	{
-		std::vector < std::vector<T> > res;
-		_getPermutationsRecur(vector, vector.size(), vector.size(), res);
+		std::vector <std::vector<T>> res;
+		std::vector<T> v = vector;
+		_getPermutationsRecur(v, vector.size(), vector.size(), res);
 		return res;
 	}
 	template<typename T>
-	void _getPermutationsRecur(std::vector<T>& vector, int size, int n, std::vector < std::vector<T> >& res)
+	void _getPermutationsRecur(std::vector<T>& vector, const int& size, const int& n, std::vector <std::vector<T>>& res)
 	{
 		if (size == 1)
 		{
@@ -147,8 +172,68 @@ namespace math {
 		}
 	}
 	template<typename T>
-	std::vector<std::vector<T>> getArrengements(std::vector<T> vector, int size)
+	std::vector<std::vector<T>> getArrengements(const std::vector<T>& vector, const int& size)
+	{
+		if (size < 0 || size > vector.size()) 
+		{
+			std::cerr << "[O::math::set::getArrengements] paramètre size invalide ! \n";
+			return std::vector<std::vector<T>>(0);
+		}
+		if (size == 0 || vector.size() == 0) return std::vector<std::vector<T>>(0);
+		// on récupère toutes les combinaisons sans répétion
+		std::vector<std::vector<T>> comb = getCombinations(vector, size);
+
+		// et ensuite pour chaques combinaisons on récupère les permutation de cet
+		// combinaisons
+		std::vector<std::vector<T>> res;
+		for (size_t i = 0; i < comb.size(); i++)
+		{
+			std::vector<std::vector<T>> permut = getPermutations(comb[i]);
+			O::vector::pushBack(res, permut);
+		}
+		return res;
+	}
+	template<typename T>
+	std::vector< std::vector< T >> getAllArrengements(const std::vector<T>& vector)
 	{
 		
+		if (vector.size() == 0) return std::vector<std::vector<T>>(0);
+		// on récupère toutes les combinaisons sans répétion
+		std::vector<std::vector<T>> comb = getAllCombinations(vector);
+
+		// et ensuite pour chaques combinaisons on récupère les permutation de cet
+		// combinaisons
+		std::vector<std::vector<T>> res;
+		for (size_t i = 0; i < comb.size(); i++)
+		{
+			std::vector<std::vector<T>> permut = getPermutations(comb[i]);
+			O::vector::pushBack(res, permut);
+		}
+		return res;
 	}
-}
+	
+	template<typename T>
+	std::vector< std::vector< T >> getAllArrengements(const std::vector<T>& vector, const int& sizeMax)
+	{
+		if (sizeMax < 0 || sizeMax > vector.size()) 
+		{
+			std::cerr << "[O::math::set::getAllArrengements] paramètre sizeMax invalide ! \n";
+			return std::vector<std::vector<T>>(0);
+		}
+		if (sizeMax == 0 || vector.size() == 0) return std::vector<std::vector<T>>(0);
+
+		// on récupère toutes les combinaisons sans répétion
+		std::vector<std::vector<T>> comb = getAllCombinations(vector, sizeMax);
+
+		// et ensuite pour chaques combinaisons on récupère les permutation de cet
+		// combinaisons
+		std::vector<std::vector<T>> res;
+		for (size_t i = 0; i < comb.size(); i++)
+		{
+			std::vector<std::vector<T>> permut = getPermutations(comb[i]);
+			O::vector::pushBack(res, permut);
+		}
+		return res;
+	}
+
+}}}

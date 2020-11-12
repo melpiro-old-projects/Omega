@@ -1,36 +1,31 @@
-#include "Input.h"
-
-namespace ssf {
+#include "Graphics/Input.h"
+namespace O{
+namespace graphics {
 
 	Input::Input()
 	{
 
 	}
 
-	Input::Input(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered):
-		ssf::Input(window,"global", x, y, sizeX, sizeY, posRx, posRy, centered)
-	{
-
-
-	}
 
 
 	Input::Input(sf::RenderWindow* window, std::string font, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered):
-		ssf::Button(window, font, x, y, sizeX, sizeY, posRx, posRy, centered)
+		graphics::Button(window, font, x, y, sizeX, sizeY, posRx, posRy, centered)
 	{
-		ssf::Text::m_isOrigineAsCenter = false;
-		ssf::Text::gT().setOrigin(0, 0);
-		//ssf::Text::update();
+		graphics::Text::m_isOrigineAsCenter = false;
+		graphics::Text::gT().setOrigin(0, 0);
 
-		ssf::Button::setColorOnHover(sf::Color::Transparent, sf::Color::Transparent);
-		ssf::Button::setOutlineColorOnHover(sf::Color::White, sf::Color::White);
-		ssf::Button::setOutlineThickness(3);
-		ssf::Button::setCharacterSize(sizeY - ssf::Button::getOutlineThickness() * 2.0 - 4);
+		graphics::Button::setColorOnHover(sf::Color::Transparent, sf::Color::Transparent);
+		graphics::Button::setOutlineColorOnHover(sf::Color::White, sf::Color::White);
+		graphics::Button::setOutlineThickness(3);
+		graphics::Button::setCharacterSize(sizeY - graphics::Button::getOutlineThickness() * 2.0 - 4);
 
-		m_cursor.setSize(sf::Vector2f( 1, ssf::Button::gT().getCharacterSize() ));
+		m_cursor.setSize(sf::Vector2f( 1, graphics::Button::gT().getCharacterSize() ));
 		setCharacterSize(sizeY * 8.8 / 10.0);
 		m_cursor.setFillColor(sf::Color::White);
 
+
+		setFocus(false);
 		update();
 
 	}
@@ -38,13 +33,18 @@ namespace ssf {
 
 
 
-	Input::Input(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, bool centered):
-		Input(window, x,y, sizeX, sizeY,-1,-1,centered)
+	Input::Input(sf::RenderWindow* window, std::string font, float x, float y, float sizeX, float sizeY, bool centered):
+		Input(window, font, x,y, sizeX, sizeY,0,0,centered)
 	{
+
 	}
 
 	bool Input::event(sf::Event e)
 	{
+		if (e.type==sf::Event::Resized)
+		{
+			this->update();
+		}
 		if (Button::clicked(e))
 		{
 			m_haveFocus = true;
@@ -131,7 +131,7 @@ namespace ssf {
 
 	void Input::setString(sf::String str)
 	{
-		ssf::Text::setString(str);
+		graphics::Text::setString(str);
 		update();
 	}
 
@@ -176,6 +176,7 @@ namespace ssf {
 	{
 		Rectangle::update();
 		updatePosText();
+		updatePosCursor();
 	}
 
 	void Input::setOutlineThickness(float v)
@@ -189,7 +190,7 @@ namespace ssf {
 		if (m_haveFocus) updatePosCursor();
 		sf::FloatRect rect = m_rectangle.getGlobalBounds();
 		sf::FloatRect textRect = m_text.getGlobalBounds();
-		Text::setPosition(rect.left + ssf::Button::gR().getOutlineThickness() + 2, rect.top + rect.height / 2.0 - ((double)m_text.getCharacterSize()) / 1.5 );
+		Text::setPosition(rect.left + graphics::Button::gR().getOutlineThickness() + 2, rect.top + rect.height / 2.0 - ((double)m_text.getCharacterSize()) / 1.5 );
 		Text::update();
 	}
 
@@ -237,7 +238,7 @@ namespace ssf {
 	void Input::setCharacterSize(int value)
 	{
 		Text::setCharacterSize(value);
-		m_cursor.setSize(sf::Vector2f( 1, ssf::Button::gT().getCharacterSize() ));
+		m_cursor.setSize(sf::Vector2f( 1, graphics::Button::gT().getCharacterSize() ));
 	}
 
 	void Input::addChar(sf::Uint32 c)
@@ -257,7 +258,7 @@ namespace ssf {
 				m_cusorIndex++;
 			}
 		}
-		ssf::Button::setString(string);
+		graphics::Button::setString(string);
 		update();
 	}
 
@@ -272,7 +273,7 @@ namespace ssf {
 			{
 				string.erase(m_cusorIndex - 1);
 				m_cusorIndex--;
-				ssf::Button::setString(string);
+				graphics::Button::setString(string);
 			}
 		}
 		update();
@@ -304,7 +305,7 @@ namespace ssf {
 						m_cusorIndex--;
 					}
 				}
-				ssf::Button::setString(string);
+				graphics::Button::setString(string);
 			}
 		}
 		update();
@@ -337,4 +338,5 @@ namespace ssf {
 	}
 
 
+}
 }

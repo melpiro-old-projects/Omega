@@ -1,26 +1,29 @@
 #pragma once
-#include "Rectangle.h"
-#include "Text.h"
+#include "Graphics/Rectangle.h"
+#include "Graphics/Text.h"
 #include <SFML/Graphics.hpp>
 
-namespace ssf {
-	class Button : public ssf::Rectangle, public ssf::Text
+namespace O {
+namespace graphics {
+	class Button : public graphics::Rectangle, public graphics::Text
 	{
 	public:
 		Button();
-		Button(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered = false);
-		Button(sf::RenderWindow* window, std::string font, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered = false);
-		Button(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, bool centered = false);
+		Button(sf::RenderWindow* window, std::string fontName, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered = false);
+		Button(sf::RenderWindow* window, std::string fontName, float x, float y, float sizeX, float sizeY, bool centered = false);
 
+		///////////////////////////////////////////////////////////////
+		// event
+		void event(sf::Event e);
 		
 		///////////////////////////////////////////////////////////////:
 		// detection du passage de la souris sur le bouton
 		// pour detecter un clic il faut le coupler � sf::event
-		bool hover(float viewZoom = 1);
+		bool hover();
 
 		///////////////////////////////////////////////////////////////:
 		// d�t�ction du clic
-		bool clicked(sf::Event& e, float viewZoom = 1);
+		bool clicked(sf::Event& e);
 
 		///////////////////////////////////////////////////////////////:
 		// contour size
@@ -30,7 +33,6 @@ namespace ssf {
 		///////////////////////////////////////////////////////////////:
 		// updates
 		void update();
-		void update(float viewZoom);
 
 		///////////////////////////////////////////////////////////////:
 		// affichage
@@ -77,4 +79,4 @@ namespace ssf {
 
 	};
 
-}
+}}

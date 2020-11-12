@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Button.h"
+#include "Graphics/Button.h"
 #include <bitset>
 
-namespace ssf {
-	class Input : public ssf::Button
+namespace O {
+namespace graphics {
+	class Input : public graphics::Button
 	{
 	public:
 		Input();
-		Input(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered = false);
 		Input(sf::RenderWindow* window, std::string font, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered = false);
-		Input(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, bool centered = false);
+		Input(sf::RenderWindow* window, std::string font, float x, float y, float sizeX, float sizeY, bool centered = false);
 
 		bool event(sf::Event e);
 
@@ -50,6 +50,4 @@ namespace ssf {
 		void removeWord();
 
 	};
-}
-
-
+}}

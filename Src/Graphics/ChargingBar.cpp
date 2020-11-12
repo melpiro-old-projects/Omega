@@ -1,18 +1,29 @@
-#include "ChargingBar.h"
+#include "Graphics/ChargingBar.h"
+
+namespace O{
+namespace graphics{
+
+
 
 ChargingBar::ChargingBar()
 {
+
 }
 
 ChargingBar::ChargingBar(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered):
 	m_fen(window),
 	m_backgroundRect(window, x,y,sizeX,sizeY, posRx, posRy, centered),
-	m_foregroundRect(window, 0, 0, 0, sizeY, posRx, posRy)
+	m_foregroundRect(window, 0, 0, 0, sizeY, 0, 0)
 {
 	m_backgroundRect.setFillColor(sf::Color(25, 25, 25));
 	m_foregroundRect.setFillColor(sf::Color(255, 110, 110));
 
-	update();
+	if (centered)
+	{
+		setOrigineAsCenter();
+	}
+	else
+		update();
 }
 
 ChargingBar::ChargingBar(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, bool centered) :
@@ -49,29 +60,31 @@ void ChargingBar::setMaxChargingValue(double value)
 	update();
 }
 
-bool ChargingBar::hover(float viewZoom)
+bool ChargingBar::hover()
 {
-	return m_backgroundRect.hover(viewZoom);
+	return m_backgroundRect.hover();
 }
 
-bool ChargingBar::clicked(sf::Event e, float viewZoom)
+bool ChargingBar::clicked(sf::Event& e)
 {
-	return m_backgroundRect.clicked(e, viewZoom);
+	return m_backgroundRect.clicked(e);
+}
+
+void ChargingBar::event(sf::Event& e)
+{
+	if (e.type == sf::Event::Resized)
+	{
+		update();
+	}
 }
 
 void ChargingBar::update()
 {
-	updatePosForeground();
 	m_backgroundRect.update();
+	updatePosForeground();
 	m_foregroundRect.update();
 }
 
-void ChargingBar::update(double viewZoom)
-{
-	m_backgroundRect.update(viewZoom); 
-	updatePosForeground(viewZoom);
-	m_foregroundRect.update(viewZoom);
-}
 
 void ChargingBar::setPosition(float x, float y)
 {
@@ -136,5 +149,15 @@ void ChargingBar::updatePosForeground(double viewZoom)
 
 	m_foregroundRect.setPosition(bounds.left + getOutlineThickness(), bounds.top + getOutlineThickness());
 	m_foregroundRect.setSize(m_backgroundRect.getSize().x * m_chargingPercent, m_backgroundRect.getSize().y);
-
 }
+
+void ChargingBar::setOrigineAsCenter()
+{
+	m_isOrigineAsCenter = true;
+	m_backgroundRect.setOrigineAsCenter();
+
+	update();
+}
+
+
+}}

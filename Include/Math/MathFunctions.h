@@ -3,7 +3,9 @@
 #include <cmath>
 #include <SFML/Graphics.hpp>
 #include "StaticValues.h"
+#include <functional>
 
+namespace O{
 namespace math {
 	template<typename T>
 	double getCoefDir(const sf::Vector2<T>& p1, const sf::Vector2<T>& p2);
@@ -65,7 +67,10 @@ namespace math {
 
 	sf::Vector2f normalise(const sf::Vector2f& vec);
 	double dot(const sf::Vector2f& a, const sf::Vector2f& b);
+
+	std::function<double (double)> getDerivative(double (* function)(double));
 	
+}
 }
 
 #include "MathFunction.ipp"

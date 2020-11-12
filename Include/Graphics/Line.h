@@ -2,11 +2,11 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "Point.h"
-#include "MathFunctions.h"
+#include "Math/MathFunctions.h"
 #include "StaticValues.h"
 
-namespace ssf {
+namespace O {
+namespace graphics {
 	class Line
 	{
 	public:
@@ -14,17 +14,18 @@ namespace ssf {
 		Line(sf::RenderWindow* window, sf::Vector2f p1, sf::Vector2f p2, float width, float posRx = -1, float posRy = -1);
 		Line(sf::RenderWindow* window, sf::Vector2f p, float angle, float length, float width, float posRx = -1, float posRy = -1);
 		
+		void event(sf::Event& e);
 
 		///////////////////////////////////////////////////////////////:
 		// update: dplace la texture en fonction du redimentionnement
 		// de la fenetre
-		// attention il faut appeler update après les modification 
+		// attention il faut appeler update aprï¿½s les modification 
 		// sur le sprite obligatoirement !
 		void update();
-		void update(float viewZoom);
 
 		///////////////////////////////////////////////////////////////
 		// mise a l'echelle en fonction de la taille de la fenetre
+		// (sert pour les graphiques)
 		void updateScale();
 
 
@@ -64,7 +65,7 @@ namespace ssf {
 		void setPointsForScale(sf::Vector2f p1, sf::Vector2f p2, sf::Vector2f scale);
 
 		///////////////////////////////////////////////////////////////
-		// fenetre liée à l'objet
+		// fenetre liï¿½e ï¿½ l'objet
 		sf::RenderWindow* m_fen;
 
 		///////////////////////////////////////////////////////////////:
@@ -84,5 +85,4 @@ namespace ssf {
 		float m_width;
 		float m_length;
 	};
-}
-
+}}

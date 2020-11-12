@@ -2,10 +2,10 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "StaticValues.h"
-#include "PrintFunctions.h"
+#include "Operators/PrintFunctions.h"
 
-namespace ssf
-{
+namespace O {
+namespace graphics {
 	class Rectangle
 	{
 	public:
@@ -18,8 +18,7 @@ namespace ssf
 		// de la fenetre
 		// attention il faut appeler update apr�s les modification 
 		// sur le sprite obligatoirement !
-		void update();
-		void update(float viewZoom);
+		void event(sf::Event& e);
 
 
 		///////////////////////////////////////////////////////////////:
@@ -56,8 +55,8 @@ namespace ssf
 
 		///////////////////////////////////////////////////////////////:
 		// pour faire des bouttons
-		bool hover(float viewZoom = 1);
-		bool clicked(sf::Event& e, float viewZoom = 1);
+		bool hover();
+		bool clicked(sf::Event& e);
 
 		///////////////////////////////////////////////////////////////
 		// update de la couleur en fonction du hover
@@ -81,7 +80,12 @@ namespace ssf
 		// origine as center
 		void setOrigineAsCenter();
 
+		
+		void update();
+
 	protected:
+
+		
 
 		///////////////////////////////////////////////////////////////
 		// fenetre li�e � l'objet
@@ -114,5 +118,5 @@ namespace ssf
 		// origine as center
 		bool m_isOrigineAsCenter;
 	};
-}
+}}
 

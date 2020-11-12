@@ -1,8 +1,9 @@
-#include "Line.h"
+#include "Graphics/Line.h"
 
 
-namespace ssf
-{
+namespace O{
+namespace graphics {
+
 	Line::Line()
 	{
 
@@ -39,6 +40,14 @@ namespace ssf
 		
 	}
 
+	void Line::event(sf::Event& e)
+	{
+		if (e.type == sf::Event::Resized)
+		{
+			update();
+		}
+	}
+
 	
 	void Line::update()
 	{
@@ -46,21 +55,10 @@ namespace ssf
 		float factorX = (float)m_fen->getSize().x / STATIC::SYS::WIDTH;
 		float factorY = (float)m_fen->getSize().y / STATIC::SYS::HIGHT;
 
-
 		m_rectangle.setPosition(m_p1.x + (factorX - 1) * m_posRx, m_p1.y + (factorY - 1) * m_posRy);
 
 	}
 
-	void Line::update(float viewZoom)
-	{
-		m_rectangle.setScale(viewZoom, viewZoom);
-
-		//facteur de redimentionnement
-		float factorX = (float)m_fen->getSize().x / STATIC::SYS::WIDTH;
-		float factorY = (float)m_fen->getSize().y / STATIC::SYS::HIGHT;
-
-		m_rectangle.setPosition((m_p1.x + (factorX - 1) * m_posRx) * viewZoom, (m_p1.y + (factorY - 1) * m_posRy) * viewZoom);
-	}
 
 	void Line::updateScale()
 	{
@@ -130,7 +128,7 @@ namespace ssf
 		m_rectangle.setSize(sf::Vector2f(m_length, m_width));
 		m_rectangle.setRotation(math::getAngleDeg((sf::Vector2f) p1, (sf::Vector2f)p2));
 
-		update(viewZoom);
+		update();
 	}
 	void Line::setPoints(sf::Vector2f p, float angle, float length)
 	{
@@ -197,4 +195,4 @@ namespace ssf
 	}
 
 
-}
+}}

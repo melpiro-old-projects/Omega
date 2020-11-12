@@ -1,4 +1,8 @@
-#include "DotGraphApp.h"
+#include "Graphics/DotGraphApp.h"
+
+namespace O{
+namespace graphics{
+
 
 DotGraphApp::DotGraphApp()
 {
@@ -176,3 +180,5 @@ void DotGraphApp::updateAdd(std::string name, sf::Vector2f coord)
 		}
 	}
 }
+
+}}

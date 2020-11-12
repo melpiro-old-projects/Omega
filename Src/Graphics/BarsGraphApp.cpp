@@ -1,4 +1,7 @@
-#include "BarsGraphApp.h"
+#include "Graphics/BarsGraphApp.h"
+
+namespace O {
+namespace graphics {
 
 BarsGraphApp::BarsGraphApp()
 {
@@ -219,3 +222,5 @@ void BarsGraphApp::updateAdd(std::string name, double height, sf::Color c)
 			
 	}
 }
+
+}}

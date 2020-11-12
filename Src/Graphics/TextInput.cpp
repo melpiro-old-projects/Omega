@@ -1,37 +1,36 @@
-#include "TextInput.h"
+#include "Graphics/TextInput.h"
 
-namespace ssf {
+namespace O {
+namespace graphics {
 
 	TextInput::TextInput()
 	{
 
 	}
 
-	TextInput::TextInput(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered):
-		ssf::TextInput(window,"global", x, y, sizeX, sizeY, posRx, posRy, centered)
-	{
-
-
-	}
-
-
 	TextInput::TextInput(sf::RenderWindow* window, std::string font, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered):
-		ssf::Input(window, font, x, y, sizeX, sizeY, posRx, posRy, centered)
+		graphics::Input(window, font, x, y, sizeX, sizeY, posRx, posRy, centered)
 	{
-
+		setCharacterSize(30);
+		setFocus(false);
+		update();
 	}
 
 
 
 
-	TextInput::TextInput(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, bool centered):
-		TextInput(window, x,y, sizeX, sizeY,-1,-1,centered)
+	TextInput::TextInput(sf::RenderWindow* window, std::string font, float x, float y, float sizeX, float sizeY, bool centered):
+		TextInput(window, font, x,y, sizeX, sizeY,-1,-1,centered)
 	{
 
 	}
 
 	bool TextInput::event(sf::Event e)
 	{
+		if (e.type==sf::Event::Resized)
+		{
+			this->update();
+		}
 		if (Button::clicked(e))
 		{
 			m_haveFocus = true;
@@ -126,8 +125,8 @@ namespace ssf {
 	{
 		nonModifiedString = str;
 		sf::Font font = *gT().getFont();
-		ssf::Button::setString(
-			ready_text(nonModifiedString, getSize().x - ssf::Button::gR().getOutlineThickness() - 10, gT().getCharacterSize(), font)
+		graphics::Button::setString(
+			ready_text(nonModifiedString, getSize().x - graphics::Button::gR().getOutlineThickness() - 10, gT().getCharacterSize(), font)
 		);
 		update();
 	}
@@ -154,6 +153,7 @@ namespace ssf {
 	{
 		Rectangle::update();
 		updatePosText();
+		updatePosCursor();
 	}
 
 	void TextInput::setOutlineThickness(float v)
@@ -167,7 +167,7 @@ namespace ssf {
 		if (m_haveFocus) updatePosCursor();
 		sf::FloatRect rect = m_rectangle.getGlobalBounds();
 		sf::FloatRect textRect = m_text.getGlobalBounds();
-		Text::setPosition(rect.left + ssf::Button::gR().getOutlineThickness() + 2, rect.top + ssf::Button::gR().getOutlineThickness() + 2);
+		Text::setPosition(rect.left + graphics::Button::gR().getOutlineThickness() + 2, rect.top + graphics::Button::gR().getOutlineThickness() + 2);
 		Text::update();
 	}
 
@@ -273,8 +273,8 @@ namespace ssf {
 		if (c == 13) //retour a la ligne
 		{
 			// on verifie qu'il est possible d'ajouter le retour a la ligne
-			m_text.setString(m_text.getString()+'p'); // on ajoute un p pour se rendre compte de la hauteur du texte réél
-			if (m_text.getGlobalBounds().height + m_text.getFont()->getLineSpacing(m_text.getCharacterSize()) < Rectangle::getSize().y - 2.0 * (ssf::Button::gR().getOutlineThickness() - 2))
+			m_text.setString(m_text.getString() + "p"); // on ajoute un p pour se rendre compte de la hauteur du texte réél
+			if (m_text.getGlobalBounds().height + m_text.getFont()->getLineSpacing(m_text.getCharacterSize()) < Rectangle::getSize().y - 2.0 * (graphics::Button::gR().getOutlineThickness() - 2))
 			{
 				m_text.setString(m_text.getString().substring(0, m_text.getString().getSize() - 1));
 
@@ -282,8 +282,8 @@ namespace ssf {
 				m_cusorIndex++;
 				nbReturn++;
 
-				ssf::Button::setString(
-					ready_text(nonModifiedString, getSize().x - ssf::Button::gR().getOutlineThickness() - 10, m_text.getCharacterSize(), *m_text.getFont())
+				graphics::Button::setString(
+					ready_text(nonModifiedString, getSize().x - graphics::Button::gR().getOutlineThickness() - 10, m_text.getCharacterSize(), *m_text.getFont())
 				);
 			}
 			else m_text.setString(m_text.getString().substring(0, m_text.getString().getSize() - 1));
@@ -296,22 +296,22 @@ namespace ssf {
 			nonModifiedString.insert(posCursor,c);
 			m_cusorIndex++;
 
-			ssf::Button::setString(
-				ready_text(nonModifiedString, getSize().x - ssf::Button::gR().getOutlineThickness() - 10, m_text.getCharacterSize(), *m_text.getFont())
+			graphics::Button::setString(
+				ready_text(nonModifiedString, getSize().x - graphics::Button::gR().getOutlineThickness() - 10, m_text.getCharacterSize(), *m_text.getFont())
 			);
 
 			m_cusorIndex+=increaced;
 
 
 
-			if (gT().getGlobalBounds().height + m_text.getFont()->getLineSpacing(m_text.getCharacterSize()) > Rectangle::getSize().y - 2.0 * (ssf::Button::gR().getOutlineThickness() - 2))
+			if (gT().getGlobalBounds().height + m_text.getFont()->getLineSpacing(m_text.getCharacterSize()) > Rectangle::getSize().y - 2.0 * (graphics::Button::gR().getOutlineThickness() - 2))
 			{
 				// retour arrère
 				nonModifiedString = nonModifiedStringCpy;
 				m_cusorIndex--;
 
-				ssf::Button::setString(
-					ready_text(nonModifiedString, getSize().x - ssf::Button::gR().getOutlineThickness() - 10, m_text.getCharacterSize(), *m_text.getFont())
+				graphics::Button::setString(
+					ready_text(nonModifiedString, getSize().x - graphics::Button::gR().getOutlineThickness() - 10, m_text.getCharacterSize(), *m_text.getFont())
 				);
 
 				m_cusorIndex-=decreaced;
@@ -334,8 +334,8 @@ namespace ssf {
 
 
 				sf::Font font = *gT().getFont();
-				ssf::Button::setString(
-					ready_text(nonModifiedString, getSize().x - ssf::Button::gR().getOutlineThickness() - 10, gT().getCharacterSize(), font)
+				graphics::Button::setString(
+					ready_text(nonModifiedString, getSize().x - graphics::Button::gR().getOutlineThickness() - 10, gT().getCharacterSize(), font)
 				);
 
 				m_cusorIndex-=decreaced;
@@ -381,8 +381,8 @@ namespace ssf {
 				}
 
 				sf::Font font = *gT().getFont();
-				ssf::Button::setString(
-					ready_text(nonModifiedString, getSize().x - ssf::Button::gR().getOutlineThickness() - 10, gT().getCharacterSize(), font)
+				graphics::Button::setString(
+					ready_text(nonModifiedString, getSize().x - graphics::Button::gR().getOutlineThickness() - 10, gT().getCharacterSize(), font)
 				);
 
 				m_cusorIndex-=decreaced;
@@ -446,4 +446,4 @@ namespace ssf {
 	}
 }
 
-
+}

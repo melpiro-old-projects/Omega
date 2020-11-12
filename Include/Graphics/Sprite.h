@@ -2,19 +2,22 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "StaticValues.h"
+#include "Graphics/RessourceManager.h"
 
-namespace ssf
-{
+namespace O {
+namespace graphics {
 	class Sprite
 	{
 	public:
 		Sprite();
-		Sprite(sf::RenderWindow* window, std::string local, float x = 0, float y = 0, float posRx = -1, float posRy = -1, bool centered = false);
-		Sprite(sf::RenderWindow* window, std::string local, float x = 0, float y = 0, bool centered = false);
-		Sprite(sf::RenderWindow* window, std::string local, float x = 0, float y = 0);
+		Sprite(sf::RenderWindow* window, std::string textureName, float x = 0, float y = 0, float posRx = 0, float posRy = 0, bool centered = false);
+		Sprite(sf::RenderWindow* window, std::string textureName, float x, float y, bool centered);
 
 		void loadTexture();
 		void loadTexture(sf::Texture& tex);
+
+		
+		void event(sf::Event e);
 
 		///////////////////////////////////////////////////////////////:
 		// update: dplace la texture en fonction du redimentionnement
@@ -22,13 +25,11 @@ namespace ssf
 		// attention il faut appeler update apr�s les modification 
 		// sur le sprite obligatoirement !
 		void update();
-		void update(float viewZoom);
-
 
 		///////////////////////////////////////////////////////////////:
 		//affichage dans le fenetre
 		void draw();
-		void draw(sf::IntRect bound);
+		void draw(sf::FloatRect bound);
 
 
 		///////////////////////////////////////////////////////////////:
@@ -41,7 +42,6 @@ namespace ssf
 		///////////////////////////////////////////////////////////////:
 		// setPosition qui prend en compte les facteurs de redimention
 		void setPosition(float x, float y);
-		void setPosition(float x, float y, bool update);
 		void move(float x, float y);
 		void setScale(float x, float y);
 		sf::Vector2f getPosition();
@@ -49,8 +49,8 @@ namespace ssf
 
 		///////////////////////////////////////////////////////////////:
 		// pour faire des bouttons
-		bool hover(float viewZoom = 1);
-		bool clicked(sf::Event& e, float viewZoom = 1);
+		bool hover();
+		bool clicked(sf::Event e);
 
 
 		///////////////////////////////////////////////////////////////:
@@ -68,22 +68,16 @@ namespace ssf
 
 	protected:
 
+		
+
 		///////////////////////////////////////////////////////////////
 		// fenetre li�e � l'objet
 		sf::RenderWindow* m_fen;
 
 		///////////////////////////////////////////////////////////////:
-		//chemin vers la texture locale
-		std::string m_local;
-
-
-		///////////////////////////////////////////////////////////////:
 		//sprite
 		sf::Sprite m_sprite;
-		///////////////////////////////////////////////////////////////:
-		// texture du sprite
-		sf::Texture m_texture;
-
+		std::string m_textureName;
 
 		///////////////////////////////////////////////////////////////:
 		//position en x et y sans modification
@@ -98,6 +92,8 @@ namespace ssf
 		///////////////////////////////////////////////////////////////:
 		// origine as center
 		bool m_isOrigineAsCenter;
+
+	
 	};
-}
+}}
 

@@ -6,14 +6,6 @@
 // tel que la localisation des fichiers ou encore la valeur
 // de PI ou autres
 namespace STATIC {
-	namespace PATH
-	{
-
-		std::string const SETTINGS_FONTS = "ressources/settings/fonts.data";
-		std::string const SETTINGS_LANGUAGES = "ressources/settings/language.data";
-		std::string const TEXTURES_DIRECTORY = "ressources/graphics/textures/";
-
-	}
 
 	namespace MATH
 	{

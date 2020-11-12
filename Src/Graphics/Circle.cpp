@@ -1,8 +1,8 @@
 #include "Graphics/Circle.h"
 
+namespace O{
+namespace graphics {
 
-namespace ssf
-{
 	Circle::Circle()
 	{
 
@@ -39,13 +39,19 @@ namespace ssf
 	}
 
 	Circle::Circle(sf::RenderWindow* window, float x, float y, float radius, bool centered) :
-		Circle(window, x, y, radius, -1, -1, centered)
+		Circle(window, x, y, radius, 0, 0, centered)
 	{
 	}
 
 
 
-
+	void Circle::event(sf::Event& e)
+	{
+		if (e.type == sf::Event::Resized)
+		{
+			update();
+		}
+	}
 
 	void Circle::update()
 	{
@@ -59,14 +65,7 @@ namespace ssf
 
 	}
 
-	void Circle::update(float viewZoom)
-	{
-		//facteur de redimentionnement
-		float factorX = (float)m_fen->getSize().x / STATIC::SYS::WIDTH;
-		float factorY = (float)m_fen->getSize().y / STATIC::SYS::HIGHT;
 
-		m_circle.setPosition(m_x + (factorX - 1) * m_posRx * viewZoom, m_y + (factorY - 1) * m_posRy * viewZoom);
-	}
 
 	void Circle::draw()
 	{
@@ -153,15 +152,15 @@ namespace ssf
 		return m_circle.getRadius();
 	}
 
-	bool Circle::hover(float viewZoom)
+	bool Circle::hover()
 	{
-		sf::View v = m_fen->getView();
-		float x = sf::Mouse::getPosition(*m_fen).x * viewZoom + v.getCenter().x - v.getSize().x / 2;
-		float y = sf::Mouse::getPosition(*m_fen).y * viewZoom + v.getCenter().y - v.getSize().y / 2;
+		auto p = sf::Mouse::getPosition(*m_fen);
 		sf::FloatRect b = m_circle.getGlobalBounds();
+
 		bool isIn = (getRadius() > math::getDistance(
 			sf::Vector2f(b.left + b.width/2.0, b.top + b.height / 2.0),
-			sf::Vector2f(x,y)));
+			sf::Vector2f(p.x,p.y)));
+
 		if (isIn)
 		{
 			setFillColor(m_hoverColor, true);
@@ -176,13 +175,13 @@ namespace ssf
 		return isIn;
 	}
 
-	bool Circle::clicked(sf::Event& e, float viewZoom)
+	bool Circle::clicked(sf::Event& e)
 	{
 		if (e.type == sf::Event::MouseButtonReleased)
 		{
 			if (e.mouseButton.button == sf::Mouse::Left)
 			{
-				if (hover(viewZoom))
+				if (hover())
 				{
 					return true;
 				}
@@ -230,4 +229,5 @@ namespace ssf
 		update();
 	}
 
+}
 }

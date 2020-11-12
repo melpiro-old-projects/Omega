@@ -4,10 +4,12 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
-#include "triplet.h"
-#include "MathFunctions.h"
-#include "RandomFunctions.h"
+#include "Data/triplet.h"
+#include "Math/MathFunctions.h"
+#include "Math/RandomFunctions.h"
 
+
+namespace O{
 namespace vector {
 	template<typename T>
 	void pushBack(std::vector<T>& source, std::vector<T> data);
@@ -163,7 +165,7 @@ namespace vector {
 	template<typename T>
 	std::pair<int, int> find(std::vector < std::vector<T> >& vector, T data);
 	template<typename T>
-	std::triplet<int, int, int> find(std::vector<std::vector < std::vector<T> >>& vector, T data);
+	O::data::triplet<int, int, int> find(std::vector<std::vector < std::vector<T> >>& vector, T data);
 
 	template<typename T>
 	bool contains(std::vector<T>& vector, T data);
@@ -308,6 +310,17 @@ namespace vector {
 	void add(std::vector<T>& vector, J value, I modulo);
 	template<typename T>
 	std::vector<T> add(const std::vector<T>& a, const std::vector<T>& b);
+
+	template<typename T, typename T_, typename R, typename R_>
+	std::vector<R> applyFunction(const std::vector<T>& vec, R_ (*function)(T_));
+
+	template<typename T,typename T_, typename U,typename U_, typename R, typename R_>
+	std::vector<R> applyFunction(const std::vector<T>& vec, R_ (*function)(T_, U_), U arg);
+
+	template<typename T,typename T_, typename U,typename U_, typename V,typename V_, typename R,typename R_>
+	std::vector<R> applyFunction(const std::vector<T>& vec, R_ (*function)(T_, U_, V_), U arg, V arg2);
+
 } 
+}
 
 #include "VectorFunction.ipp"

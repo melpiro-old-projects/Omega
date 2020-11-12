@@ -1,77 +1,36 @@
-#include "EncodeFunction.h"
-
-namespace encodage {
-	sf::String encodeToUTF32(std::string str)
-	{
-        
-		std::basic_string<sf::Uint32> utf32;
-		sf::Utf8::toUtf32(str.begin(), str.end(), std::back_inserter(utf32));
-        sf::String SFstr = utf32;
-
-		return SFstr;
-	}
+#include "String/EncodeFunction.h"
+namespace O{
+namespace str {
 
     
-
-    std::wstring encodeToUTF32(std::wstring str)
+    std::string convert_SFML_string_to_UTF8_string(const sf::String& str)
     {
-        std::basic_string<sf::Uint32> utf32;
-        sf::Utf8::toUtf32(str.begin(), str.end(), std::back_inserter(utf32));
-        sf::String SFstr = utf32;
-
-        return SFstr;
+        auto cUtf8 = str.toUtf8(); // on convertis de l'utf 8 (encodage unicode clasique des std string)
+        std::string res="";
+        for (size_t i = 0; i < cUtf8.size(); i++)
+        {
+            res += cUtf8[i];
+        }
+        return res;
     }
 
 
-    void ucs2CharToUtf8Char(const wchar_t ucs2Char, char* utf8Tok)
+    sf::String convert_UTF8_string_to_SFML_string(const std::string& str)
     {
-        //We do math, that relies on unsigned data types
-        uint32_t ucs2CharValue = static_cast<uint32_t>(ucs2Char);   //The standard doesn't specify the signed/unsignedness of wchar_t
-        unsigned char* utf8TokUs = reinterpret_cast<unsigned char*>(utf8Tok);
-
-        //Decode
-        if (0x80 > ucs2CharValue)
-        {
-            //Tokensize: 1 byte
-            utf8TokUs[0] = static_cast<unsigned char>(ucs2CharValue);
-            utf8TokUs[1] = '\0';
-        }
-        else if (0x800 > ucs2CharValue)
-        {
-            //Tokensize: 2 bytes
-            utf8TokUs[2] = '\0';
-            utf8TokUs[1] = static_cast<unsigned char>(0x80 | (ucs2CharValue & 0x3F));
-            ucs2CharValue = (ucs2CharValue >> 6);
-            utf8TokUs[0] = static_cast<unsigned char>(0xC0 | ucs2CharValue);
-        }
-        else
-        {
-            //Tokensize: 3 bytes
-            utf8TokUs[3] = '\0';
-            utf8TokUs[2] = static_cast<unsigned char>(0x80 | (ucs2CharValue & 0x3F));
-            ucs2CharValue = (ucs2CharValue >> 6);
-            utf8TokUs[1] = static_cast<unsigned char>(0x80 | (ucs2CharValue & 0x3F));
-            ucs2CharValue = (ucs2CharValue >> 6);
-            utf8TokUs[0] = static_cast<unsigned char>(0xE0 | ucs2CharValue);
-        }
+        return sf::String::fromUtf8(str.begin(), str.end());
     }
 
-    std::string ucs2ToUtf8(const std::wstring& ucs2Str)
+    std::vector<sf::String> convert_UTF8_string_to_SFML_string(const std::vector<std::string>& str)
     {
-        std::string utf8Result;
-        char utf8Sequence[] = { 0, 0, 0, 0, 0 };
-        const wchar_t* cursor = ucs2Str.c_str();
-        const wchar_t* const end = ucs2Str.c_str() + ucs2Str.length();
-
-        while (end > cursor)
+        std::vector<sf::String> r;
+        for (size_t i = 0; i < str.size(); i++)
         {
-            const wchar_t ucs2Char = *cursor;
-            ucs2CharToUtf8Char(ucs2Char, utf8Sequence);
-            utf8Result.append(utf8Sequence);
-            cursor++;
+            r.push_back(convert_UTF8_string_to_SFML_string(str[i]));
         }
-
-        return utf8Result;
+        return r;
     }
+
+	
+}
 }
 

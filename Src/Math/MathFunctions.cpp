@@ -1,5 +1,5 @@
-#include "MathFunctions.h"
-
+#include "Math/MathFunctions.h"
+namespace O{
 namespace math {
 	double ToDeg(const double& rad)
 	{
@@ -31,4 +31,13 @@ namespace math {
 		return a.x * b.x + a.y * b.y;
 	}
 
+	std::function<double (double)> getDerivative(double (* function)(double))
+	{
+		return [function](double n)->double {
+			return (function(n) - function(n + 0.000000000001)) / (-0.000000000001);
+		};
+	}
+
+
+}
 }

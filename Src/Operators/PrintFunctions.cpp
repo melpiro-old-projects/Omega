@@ -1,17 +1,9 @@
-#include "PrintFunctions.h"
+#include "Operators/PrintFunctions.h"
 
-namespace print {
 
-	void print(CityNode var)
-	{
-		std::cout << var.id << " -> x:" << var.x << " y:" << var.y << std::endl;
-	}
-
-}
-
-std::ostream& operator<<(std::ostream& os, std::wstring str)
+std::ostream& operator<<(std::ostream& os, sf::String str)
 {
-	os << str.c_str();
+	os << O::str::convert_SFML_string_to_UTF8_string(str);
 	return os;
 }
 

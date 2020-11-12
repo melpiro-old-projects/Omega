@@ -1,13 +1,12 @@
 #pragma once
 
 #include <SFML/System.hpp>
+#include <vector>
 
-
-namespace encodage {
-	sf::String encodeToUTF32(std::string str);
-	std::wstring encodeToUTF32(std::wstring str);
-
-	void ucs2CharToUtf8Char(const wchar_t ucs2Char, char* utf8Tok);
-
-	std::string ucs2ToUtf8(const std::wstring& ucs2Str);
+namespace O{
+namespace str {
+	std::string convert_SFML_string_to_UTF8_string(const sf::String& str);
+	sf::String convert_UTF8_string_to_SFML_string(const std::string& str);
+	std::vector<sf::String> convert_UTF8_string_to_SFML_string(const std::vector<std::string>& str);
+}
 }

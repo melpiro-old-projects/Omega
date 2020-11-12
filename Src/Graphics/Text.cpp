@@ -1,7 +1,8 @@
-#include "Text.h"
+#include "Graphics/Text.h"
 
 
-namespace ssf {
+namespace O{
+namespace graphics {
 
 	Text::Text() : m_text()
 	{
@@ -9,21 +10,11 @@ namespace ssf {
 		m_y = 0;
 		m_isOrigineAsCenter = false;
 	}
-	Text::Text(sf::RenderWindow* window, float x, float y, float posRx, float posRy, bool centered) : m_text()
+	Text::Text(sf::RenderWindow* window, std::string fontName, float x, float y, float posRx, float posRy, bool centered):
+		m_fen(window),
+		m_fontName(fontName),
+		m_x(x), m_y(y), m_posRx(posRx), m_posRy(posRy)
 	{
-		m_fen = window; // on defini la fenetre
-		m_text.setFont(GLOBAL::GLOBAL_FONT["global"]); // on defini la font
-
-		// positionement de l'element
-		m_x = x; 
-		m_y = y;
-
-		// delta de redimention
-		if (posRx == -1) m_posRx = x;
-		else m_posRx = posRx;
-		if (posRy == -1) m_posRy = y;
-		else m_posRy = posRy;
-
 		if (centered)
 		{
 			// si l'objet doit etre centr�, un appel � update n'est pas n�c�saire
@@ -36,66 +27,58 @@ namespace ssf {
 		}
 	}
 
-	Text::Text(sf::RenderWindow* window,std::string fontName, float x, float y, float posRx, float posRy, bool centered)
+	Text::Text(sf::RenderWindow* window, std::string fontName, float x, float y, bool centered):
+		Text(window, fontName, x, y, 0, 0, false)
 	{
-		m_fen = window; // on defini la fenetre
-		m_text.setFont(GLOBAL::GLOBAL_FONT[fontName]); // on defini la font
+		
+	}
 
-		// positionement de l'element
-		m_x = x; 
-		m_y = y;
-
-		// delta de redimention
-		if (posRx == -1) m_posRx = x;
-		else m_posRx = posRx;
-		if (posRy == -1) m_posRy = y;
-		else m_posRy = posRy;
-
-		m_isOrigineAsCenter = centered;
-
-		if (centered)
+	void Text::loadFont()
+	{
+		m_text.setFont(ressourceManager.getFont(m_fontName));
+		if (m_isOrigineAsCenter) setOrigineAsCenter();
+		else
 		{
-			// si l'objet doit etre centr�, un appel � update n'est pas n�c�saire
-			// car la fonction setOrigineAsCenter le fait deja !
-			setOrigineAsCenter();
+			update();
 		}
+	}
+	void Text::loadFont(sf::Font& f)
+	{
+		m_text.setFont(f);
+		if (m_isOrigineAsCenter) setOrigineAsCenter();
 		else
 		{
 			update();
 		}
 	}
 
-	Text::Text(sf::RenderWindow* window, float x, float y, bool centered):
-		ssf::Text(window, x, y, -1.f, -1.f, centered)
+	void Text::event(sf::Event e)
 	{
-
+		if (e.type == sf::Event::Resized)
+		{
+			update();
+		}	
 	}
-	Text::Text(sf::RenderWindow* window, float x, float y) :
-		ssf::Text(window, x, y, -1.f, -1.f, false)
-	{
-
-	}
+	
 	void Text::update()
 	{
 		//facteur de redimentionnement
 		float factorX = (float)m_fen->getSize().x / STATIC::SYS::WIDTH;
 		float factorY = (float)m_fen->getSize().y / STATIC::SYS::HIGHT;
 
-
 		m_text.setPosition(m_x + (factorX - 1) * m_posRx, m_y + (factorY - 1) * m_posRy);
-
-
 	}
-	void Text::update(float viewZoom)
-	{
-		setScale(viewZoom, viewZoom);
+	// void Text::update(float viewZoom)
+	// {
+	// 	setScale(viewZoom, viewZoom);
 
-		//facteur de redimentionnement
-		float factorX = (float)m_fen->getSize().x / STATIC::SYS::WIDTH;
-		float factorY = (float)m_fen->getSize().y / STATIC::SYS::HIGHT;
+	// 	//facteur de redimentionnement
+	// 	float factorX = (float)m_fen->getSize().x / STATIC::SYS::WIDTH;
+	// 	float factorY = (float)m_fen->getSize().y / STATIC::SYS::HIGHT;
 
-		m_text.setPosition(m_x + (factorX - 1) * m_posRx * viewZoom, m_y + (factorY - 1) * m_posRy * viewZoom);
-	}
+	// 	m_text.setPosition(m_x + (factorX - 1) * m_posRx * viewZoom, m_y + (factorY - 1) * m_posRy * viewZoom);
+	// }
+
 	void Text::draw()
 	{
 		m_fen->draw(m_text);
@@ -108,12 +91,7 @@ namespace ssf {
 	{
 		m_x = x;
 		m_y = y;
-	}
-	void Text::setPosition(float x, float y, bool update)
-	{
-		m_x = x;
-		m_y = y;
-		if (update) Text::update();
+		update();
 	}
 	sf::Vector2f Text::getPosition()
 	{
@@ -123,25 +101,22 @@ namespace ssf {
 	{
 		setPosition(getPosition().x + x, getPosition().y + y);
 	}
-	bool Text::hover(float viewZoom)
+	bool Text::hover()
 	{
-		sf::View v = m_fen->getView();
-		float x = sf::Mouse::getPosition(*m_fen).x * viewZoom + v.getCenter().x - v.getSize().x / 2;
-		float y = sf::Mouse::getPosition(*m_fen).y * viewZoom + v.getCenter().y - v.getSize().y / 2;
-
-		return (m_text.getGlobalBounds().contains(x, y));
+		auto p = sf::Mouse::getPosition(*m_fen);
+		return (m_text.getGlobalBounds().contains(p.x, p.y));
 	}
 	void Text::setScale(float x, float y)
 	{
 		m_text.setScale(x, y);
 	}
-	bool Text::clicked(sf::Event& e, float viewZoom)
+	bool Text::clicked(sf::Event& e)
 	{
 		if (e.type == sf::Event::MouseButtonReleased)
 		{
 			if (e.mouseButton.button == sf::Mouse::Left)
 			{
-				if (hover(viewZoom))
+				if (hover())
 				{
 					return true;
 				}
@@ -224,4 +199,4 @@ namespace ssf {
 		
 		return text;
 	}
-}
+}}

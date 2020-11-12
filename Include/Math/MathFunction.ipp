@@ -1,6 +1,6 @@
 
-
-namespace math {
+namespace O{
+	namespace math {
 		template<typename T>
 		double getCoefDir(const sf::Vector2<T>& p1,const sf::Vector2<T>& p2)
 		{
@@ -101,3 +101,4 @@ namespace math {
 			return isDivisibleBy(num, multiple);
 		}
 	}
+}

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Rectangle.h"
-
+#include "Graphics/Rectangle.h"
+namespace O {
+namespace graphics {
 class ChargingBar
 {
 public:
@@ -9,17 +10,18 @@ public:
 	ChargingBar(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered = true);
 	ChargingBar(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, bool centered = true);
 
+	void event(sf::Event& e);
+
 	void setChargingValue(float value);
 	float getChargingValue();
 
 	void setMinChargingValue(double value);
 	void setMaxChargingValue(double value);
 
-	bool hover(float viewZoom = 1);
-	bool clicked(sf::Event e, float viewZoom = 1);
+	bool hover();
+	bool clicked(sf::Event& e);
 
 	void update();
-	void update(double viewZoom);
 
 	void setPosition(float x, float y);
 	void setPosition(float x, float y, bool update);
@@ -36,6 +38,10 @@ public:
 
 	void draw();
 
+	///////////////////////////////////////////////////////////////:
+	// origine as center
+	void setOrigineAsCenter();
+
 private:
 
 	void updatePosForeground(double viewZoom = 1);
@@ -47,10 +53,13 @@ private:
 	double m_chargeValue = 0;
 	double m_chargingPercent = 0;
 
+	bool m_isOrigineAsCenter = false;
 
-	ssf::Rectangle m_backgroundRect;
-	ssf::Rectangle m_foregroundRect;
+
+	graphics::Rectangle m_backgroundRect;
+	graphics::Rectangle m_foregroundRect;
 
 
 };
+}}
 

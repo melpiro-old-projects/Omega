@@ -2,18 +2,22 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "GlobalsVariables.h";
+#include "StaticValues.h"
+#include "Graphics/RessourceManager.h"
 
-namespace ssf{
+namespace O {
+namespace graphics {
 
 	class Text
 	{
 	public:
 		Text();
-		Text(sf::RenderWindow* window, float x = 0, float y = 0, float posRx = -1, float posRy = -1, bool centered = false);
-		Text(sf::RenderWindow* window,std::string fontName, float x = 0, float y = 0, float posRx = -1, float posRy = -1, bool centered = false);
-		Text(sf::RenderWindow* window, float x = 0, float y = 0, bool centered = false);
-		Text(sf::RenderWindow* window, float x = 0, float y = 0);
+		Text(sf::RenderWindow* window, std::string fontName, float x = 0, float y = 0, float posRx = -1, float posRy = -1, bool centered = false);
+		Text(sf::RenderWindow* window, std::string fontName, float x, float y, bool centered);
+
+
+		void loadFont();
+		void loadFont(sf::Font& f);
 
 		///////////////////////////////////////////////////////////////:
 		// update: dplace la texture en fonction du redimentionnement
@@ -21,8 +25,8 @@ namespace ssf{
 		// attention il faut appeler update apr�s les modification 
 		// sur le sprite obligatoirement !
 		void update();
-		void update(float viewZoom);
-
+		
+		void event(sf::Event e);
 
 		///////////////////////////////////////////////////////////////:
 		//affichage dans le fenetre
@@ -38,7 +42,6 @@ namespace ssf{
 		///////////////////////////////////////////////////////////////:
 		// setPosition qui prend en compte les facteurs de redimention
 		void setPosition(float x, float y);
-		void setPosition(float x, float y, bool update);
 		void move(float x, float y);
 		sf::Vector2f getPosition();
 
@@ -52,13 +55,13 @@ namespace ssf{
 
 		///////////////////////////////////////////////////////////////:
 		// pour faire des bouttons
-		bool hover(float viewZoom = 1);
+		bool hover();
 
 		void setScale(float x, float y);
 
 		///////////////////////////////////////////////////////////////
 		// check du click sur le text
-		bool clicked(sf::Event& e, float viewZoom = 1);
+		bool clicked(sf::Event& e);
 
 		///////////////////////////////////////////////////////////////:
 		// changer le point de redientionement
@@ -73,9 +76,13 @@ namespace ssf{
 
 	protected:
 
+		
+
 		///////////////////////////////////////////////////////////////
 		// fenetre li�e � l'objet
 		sf::RenderWindow* m_fen;
+
+		std::string m_fontName;
 
 		///////////////////////////////////////////////////////////////:
 		//texte
@@ -96,6 +103,6 @@ namespace ssf{
 		// origine as center
 		bool m_isOrigineAsCenter;
 	};
-}
+}}
 
 

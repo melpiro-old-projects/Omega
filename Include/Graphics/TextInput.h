@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Input.h"
+#include "Graphics/Input.h"
 #include <bitset>
 #include <math.h>
-namespace ssf {
-	class TextInput : public ssf::Input
+namespace O {
+namespace graphics {
+	class TextInput : public graphics::Input
 	{
 	public:
 		TextInput();
-		TextInput(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered = false);
 		TextInput(sf::RenderWindow* window, std::string font, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered = false);
-		TextInput(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, bool centered = false);
+		TextInput(sf::RenderWindow* window, std::string font, float x, float y, float sizeX, float sizeY, bool centered = false);
 
 		bool event(sf::Event e);
 
@@ -49,5 +49,5 @@ namespace ssf {
 		int getCursorPosInNonModifiedString();
 	};
 }
-
+}
 

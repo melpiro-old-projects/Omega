@@ -1,8 +1,11 @@
-#include "BigInt.h"
+#include "Math/BigInt.h"
+namespace O
+{
+namespace math
+{
 
 
-
-int BigInt::size() {
+int BigInt::size() const {
 	if (a.empty())return 0;
 	int ans = (a.size() - 1) * base_digits;
 	int ca = a.back();
@@ -419,3 +422,6 @@ BigInt BigInt::operator*(const BigInt& v) const {
 	res.trim();
 	return res;
 }
+
+
+}}

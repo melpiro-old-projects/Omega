@@ -1,29 +1,22 @@
-#include "Rectangle.h"
+#include "Graphics/Rectangle.h"
 
 
-namespace ssf
-{
+namespace O{
+namespace graphics {
 	Rectangle::Rectangle()
 	{
 
 	}
 
 	Rectangle::Rectangle(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, float posRx, float posRy, bool centered) : m_rectangle(sf::Vector2f(sizeX,sizeY)),
-		m_x(x), m_y(y)
+		m_fen(window),
+		m_x(x), m_y(y),
+		m_posRx(posRx), m_posRy(posRy),
+		m_isOrigineAsCenter(false)
 	{
-		m_fen = window;
 
-		if (posRx == -1) m_posRx = x;
-		else m_posRx = posRx;
-		if (posRy == -1) m_posRy = y;
-		else m_posRy = posRy;
+		
 
-		m_baseColor = sf::Color::Black;
-		m_hoverColor = sf::Color::Black;
-		m_outlineBaseColor = sf::Color::Transparent;
-		m_outlinehoverColor = sf::Color::Transparent;
-
-		m_isOrigineAsCenter = false;
 
 		if (centered)
 		{
@@ -38,36 +31,28 @@ namespace ssf
 	}
 
 	Rectangle::Rectangle(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, bool centered) :
-		Rectangle(window, x, y, sizeX, sizeY, -1, -1, centered)
+		Rectangle(window, x, y, sizeX, sizeY, 0, 0, centered)
 	{
 	}
 
 	
 
-	
+	void Rectangle::event(sf::Event& e)
+	{
+		if (e.type == sf::Event::Resized)
+		{
+			update();
+		}	
+	}
 
 	void Rectangle::update()
 	{
-		//facteur de redimentionnement
 		float factorX = (float)m_fen->getSize().x / STATIC::SYS::WIDTH;
 		float factorY = (float)m_fen->getSize().y / STATIC::SYS::HIGHT;
-
-
 
 		m_rectangle.setPosition(m_x + (factorX - 1) * m_posRx, m_y + (factorY - 1) * m_posRy);
-
 	}
 
-	void Rectangle::update(float viewZoom)
-	{
-		setScale(viewZoom, viewZoom);
-
-		//facteur de redimentionnement
-		float factorX = (float)m_fen->getSize().x / STATIC::SYS::WIDTH;
-		float factorY = (float)m_fen->getSize().y / STATIC::SYS::HIGHT;
-
-		m_rectangle.setPosition(m_x + (factorX - 1) * m_posRx * viewZoom, m_y + (factorY - 1) * m_posRy * viewZoom);
-	}
 
 	void Rectangle::draw()
 	{
@@ -158,12 +143,10 @@ namespace ssf
 		return m_rectangle.getSize();
 	}
 
-	bool Rectangle::hover(float viewZoom)
+	bool Rectangle::hover()
 	{
-		sf::View v = m_fen->getView();
-		float x = sf::Mouse::getPosition(*m_fen).x * viewZoom + v.getCenter().x - v.getSize().x / 2;
-		float y = sf::Mouse::getPosition(*m_fen).y * viewZoom + v.getCenter().y - v.getSize().y / 2;
-		bool isIn = m_rectangle.getGlobalBounds().contains(x, y);
+		auto p = sf::Mouse::getPosition(*m_fen);
+		bool isIn = m_rectangle.getGlobalBounds().contains(p.x, p.y);
 		if (isIn)
 		{
 			setFillColor(m_hoverColor, true);
@@ -178,9 +161,9 @@ namespace ssf
 		return isIn;
 	}
 
-	bool Rectangle::clicked(sf::Event& e, float viewZoom)
+	bool Rectangle::clicked(sf::Event& e)
 	{
-		if (hover(viewZoom))
+		if (hover())
 		{
 			if (e.type == sf::Event::MouseButtonReleased)
 			{
@@ -237,4 +220,4 @@ namespace ssf
 		update();
 	}
 
-}
+}}

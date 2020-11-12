@@ -1,5 +1,5 @@
-#include "VectorFunctions.h"
-
+#include "Vector/VectorFunctions.h"
+namespace O{
 namespace vector {
 
 	template<typename T>
@@ -80,7 +80,7 @@ namespace vector {
 		std::vector<T> vec;
 		for (int i = 0; i < size; i++)
 		{
-			vec.push_back(possibilite[math::randInt(0, possibilite.size())]);
+			vec.push_back(possibilite[math::rdm::randInt(0, possibilite.size())]);
 		}
 		return vec;
 	}
@@ -110,7 +110,7 @@ namespace vector {
 		source.clear();
 		for (int i = 0; i < size; i++)
 		{
-			source.push_back( possibilite[ math::randInt( 0, possibilite.size() ) ] );
+			source.push_back( possibilite[ math::rdm::randInt( 0, possibilite.size() ) ] );
 		}
 	}
 	///////////////////////////////////////////////////////////////
@@ -897,7 +897,7 @@ namespace vector {
 	}
 	///////////////////////////////////////////////////////////////
 	template<typename T>
-	std::triplet<int, int, int> find(std::vector<std::vector < std::vector<T> >>& vector, T data)
+	O::data::triplet<int, int, int> find(std::vector<std::vector < std::vector<T> >>& vector, T data)
 	{
 		for (int i = 0; i < vector.size(); i++)
 		{
@@ -905,11 +905,11 @@ namespace vector {
 			{
 				for (int k = 0; k < vector[i][j].size(); k++)
 				{
-					if (vector[i][j][k] == data) return std::make_triplet(i,j,k);
+					if (vector[i][j][k] == data) return O::data::make_triplet(i,j,k);
 				}
 			}
 		}
-		return std::make_triplet(-1, -1, -1);
+		return O::data::make_triplet(-1, -1, -1);
 	}
 	///////////////////////////////////////////////////////////////
 	template<typename T>
@@ -1205,4 +1205,38 @@ namespace vector {
 		}
 		return res;
 	}
+	///////////////////////////////////////////////////////////////
+	template<typename T, typename T_, typename R, typename R_>
+	std::vector<R> applyFunction(const std::vector<T>& vec, R_ (*function)(T_))
+	{
+		std::vector<R> res;
+		for (size_t i = 0; i < vec.size(); i++)
+		{
+			res.push_back(function(vec[i]));
+		}
+		return res;
+	}
+	///////////////////////////////////////////////////////////////
+	template<typename T,typename T_, typename U,typename U_, typename R, typename R_>
+	std::vector<R> applyFunction(const std::vector<T>& vec, R_ (*function)(T_, U_), U arg)
+	{
+		std::vector<R> res;
+		for (size_t i = 0; i < vec.size(); i++)
+		{
+			res.push_back(function(vec[i], arg));
+		}
+		return res;
+	}
+	///////////////////////////////////////////////////////////////
+	template<typename T,typename T_, typename U,typename U_, typename V,typename V_, typename R,typename R_>
+	std::vector<R> applyFunction(const std::vector<T>& vec, R_ (*function)(T_, U_, V_), U arg, V arg2)
+	{
+		std::vector<R> res;
+		for (size_t i = 0; i < vec.size(); i++)
+		{
+			res.push_back(function(vec[i], arg, arg2));
+		}
+		return res;
+	}
+}
 }
