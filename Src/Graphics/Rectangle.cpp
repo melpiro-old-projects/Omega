@@ -150,13 +150,13 @@ namespace graphics {
 		bool isIn = m_rectangle.getGlobalBounds().contains(p.x, p.y);
 		if (isIn)
 		{
-			setFillColor(m_hoverColor, true);
-			setOutlineColor(m_outlinehoverColor, true);
+			m_rectangle.setFillColor(m_hoverColor);
+			m_rectangle.setOutlineColor(m_outlinehoverColor);
 		}
 		else
 		{
-			setFillColor(m_baseColor, true);
-			setOutlineColor(m_outlineBaseColor, true);
+			m_rectangle.setFillColor(m_baseColor);
+			m_rectangle.setOutlineColor(m_outlineBaseColor);
 		}
 
 		return isIn;

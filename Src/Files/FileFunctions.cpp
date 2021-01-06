@@ -74,6 +74,7 @@ namespace O{
 			while (std::getline(flux, s))
 			{
 				O::str::remplace(s, "\\n", "\n");
+				if (s.back() == 13) s.pop_back();
 				res.push_back(s);
 			}
 			flux.close();
@@ -113,6 +114,18 @@ namespace O{
 		std::ofstream getWriteSteamBinary(const std::string& file)
 		{
 			return std::ofstream(file.c_str(), std::ios::binary);
+		}
+
+		std::vector< std::vector<std::string>> parceSVG(std::string pathToSVG, std::string separator)
+		{
+			std::vector<std::string> data = file::getAllLines(pathToSVG, false);
+			std::vector< std::vector<std::string>> res;
+			for (size_t i = 0; i < data.size(); i++)
+			{
+				res.push_back(std::vector<std::string>(0)); // on cr�� la ligne
+				O::vector::pushBack(res.back(), O::str::split(data[i], separator)); // on la remplie
+			}
+			return res;
 		}
 	}
 }

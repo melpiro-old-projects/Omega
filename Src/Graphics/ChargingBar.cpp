@@ -27,7 +27,7 @@ ChargingBar::ChargingBar(sf::RenderWindow* window, float x, float y, float sizeX
 }
 
 ChargingBar::ChargingBar(sf::RenderWindow* window, float x, float y, float sizeX, float sizeY, bool centered) :
-	ChargingBar(window, x, y, sizeX, sizeY, -1,-1, centered)
+	ChargingBar(window, x, y, sizeX, sizeY, 0,0, centered)
 {
 
 }

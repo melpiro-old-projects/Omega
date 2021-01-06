@@ -10,17 +10,18 @@ inline Matrix<T>::Matrix() :
 
 }
 template<class T>
-inline Matrix<T>::Matrix(const size_t& nb_line, const size_t& nb_collumn, const T& value)
+inline Matrix<T>::Matrix(const size_t& nb_line, const size_t& nb_collumn, const T& value) : 
+    m_matrix(nb_line)
 {
+    std::vector<T> line(nb_collumn);
+    for (size_t i = 0; i < nb_collumn; i++)
+    {
+        line[i] = value;
+    }
+    
     for (size_t i = 0; i <nb_line; i++)
     {
-        std::vector<T> valuesLine(0);
-        for (size_t j = 0; j < nb_collumn; j++)
-        {
-            valuesLine.push_back(value);
-        }
-        
-        m_matrix.push_back(valuesLine);
+        m_matrix[i] = line;
     }
 
     this->nb_line = nb_line;
@@ -164,6 +165,35 @@ inline Matrix<T> operator*(Matrix<T> const& a, T const& b)
     }
     return res;
 }
+template <typename T>
+inline Matrix<T> operator/(Matrix<T> const& a, T const& b)
+{
+    Matrix<T> res(a.getNbLine(), a.getNbCollumn());
+    for (size_t i = 0; i < a.getNbLine(); i++)
+    {
+        for (size_t j = 0; j < a.getNbCollumn(); j++)
+        {
+            res.setValue(i,j,a.getValue(i,j) / b);
+        }
+    }
+    return res;
+}
+template <typename T>
+inline bool operator==(Matrix<T> const& a, Matrix<T> const& b)
+{
+    if (a.getNbCollumn() != b.getNbCollumn()) return false;
+    if (a.getNbLine() != b.getNbLine()) return false;
+
+    for (size_t i = 0; i < a.getNbCollumn(); i++)
+    {
+        for (size_t j = 0; j < a.getNbLine(); j++)
+        {
+            if (a.getValue(j, i) != b.getValue(j, i)) return false;
+        }
+    }
+    return true;
+}
+
 template<typename T>
 inline std::vector<T>& Matrix<T>::operator[] (int line)
 {
@@ -212,6 +242,29 @@ inline Matrix<T> convertToColMatrix(sf::Vector2<T> vector)
     mat[0][0] = vector.x;
     mat[1][0] = vector.y;
     return mat;
+}
+
+
+template <typename T>
+Matrix<T> convertToColMatrix(std::vector<T> const& vector)
+{
+    O::math::Matrix<T> mat(vector.size(),1, T());
+    for (size_t i = 0; i < vector.size(); i++)
+    {
+        mat.setValue(i, 0, vector[i]);
+    }
+    return mat;
+}
+
+template <typename T>
+inline Matrix<T> convertColMatrixToVector(Matrix<T> const& mat)
+{
+    std::vector<T> vec;
+    for (size_t i = 0; i < mat.getNbLine(); i++)
+    {
+        vec.push_back(mat[i][0]);
+    }
+    return vec;
 }
 
 template <typename T>
@@ -273,6 +326,40 @@ inline sf::Vector3<T> convertToVector3(Matrix<T> mat)
     }
     std::cerr << "[O::math::Matrix::convertToVector3] invalid matrix size\n";
     return sf::Vector3<T>(T(),T(),T());
+}
+
+
+template <typename T>
+std::ofstream& operator<<( std::ofstream &flux, Matrix<T> const& m )
+{
+    flux << m.getNbLine()<<" "<<m.getNbCollumn()<<" ";
+    for (size_t l = 0; l < m.getNbLine(); l++)
+    {
+        for (size_t c = 0; c < m.getNbCollumn(); c++)
+        {
+            flux<< m.getValue(l, c)<<" ";
+        }
+    }
+    return flux;
+}
+template <typename T>
+std::ifstream& operator>>( std::ifstream &flux, Matrix<T>& m)
+{
+    int nbCol, nbLine;
+    flux >> nbLine >> nbCol;
+
+    m = Matrix<T>(nbLine, nbCol, T());
+
+    for (size_t l = 0; l <  m.getNbLine(); l++)
+    {
+        for (size_t c = 0; c < m.getNbCollumn(); c++)
+        {
+            T val;
+            flux >> val;
+            m.setValue(l, c, val);
+        }
+    }
+    return flux;
 }
 
 }}

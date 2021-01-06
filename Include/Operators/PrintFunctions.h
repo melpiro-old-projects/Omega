@@ -35,6 +35,8 @@ template<typename T, typename J, typename K>
 std::ostream& operator<<(std::ostream& os, const O::data::triplet<T, J, K>& v);
 
 
+
+
 #include "PrintFunctions.ipp"
 
 

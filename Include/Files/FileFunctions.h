@@ -5,6 +5,7 @@
 #include <fstream> 
 #include <sstream>
 #include "String/StringFunctions.h"
+#include "Operators/PrintFunctions.h"
 
 
 namespace O{
@@ -48,6 +49,8 @@ namespace O{
 		std::ofstream getWriteSteam(const std::string& file);
 		std::ofstream getWriteSteamApp(const std::string& file);
 		std::ofstream getWriteSteamBinary(const std::string& file);
+
+		std::vector< std::vector<std::string>> parceSVG(std::string pathToSVG, std::string separator = ",");
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

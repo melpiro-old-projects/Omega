@@ -100,9 +100,9 @@ namespace vector {
 		T moyenne = 0;
 		for (size_t i = 0; i < v.size(); i++)
 		{
-			moyenne += v;
+			moyenne += v[i];
 		}
-		return v / (double)(v.size());
+		return moyenne / (double)(v.size());
 	}
 	template<typename T>
 	void initRandomVector(std::vector<T>& source, int size, std::vector<T> possibilite)
@@ -1176,7 +1176,7 @@ namespace vector {
 		return sum;
 	}
 	template<typename T,typename J>
-	void add(std::vector<T>& vector, J value)
+	void add(std::vector<T>& vector, const J& value)
 	{
 		for (size_t i = 0; i < vector.size(); i++)
 		{
@@ -1194,7 +1194,7 @@ namespace vector {
 	}
 
 	template<typename T>
-	std::vector<T> add(const std::vector<T>& a, const std::vector<T>& b)
+	std::vector<T> addTwoVector(const std::vector<T>& a, const std::vector<T>& b)
 	{
 		if (a.size() != b.size()) return std::vector<T>(0);
 

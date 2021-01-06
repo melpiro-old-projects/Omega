@@ -20,7 +20,7 @@ namespace graphics {
 
 
 	TextInput::TextInput(sf::RenderWindow* window, std::string font, float x, float y, float sizeX, float sizeY, bool centered):
-		TextInput(window, font, x,y, sizeX, sizeY,-1,-1,centered)
+		TextInput(window, font, x,y, sizeX, sizeY,0,0,centered)
 	{
 
 	}

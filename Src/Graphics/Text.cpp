@@ -15,6 +15,7 @@ namespace graphics {
 		m_fontName(fontName),
 		m_x(x), m_y(y), m_posRx(posRx), m_posRy(posRy)
 	{
+
 		if (centered)
 		{
 			// si l'objet doit etre centr�, un appel � update n'est pas n�c�saire
@@ -25,6 +26,7 @@ namespace graphics {
 		{
 			update();
 		}
+		
 	}
 
 	Text::Text(sf::RenderWindow* window, std::string fontName, float x, float y, bool centered):

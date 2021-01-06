@@ -23,10 +23,10 @@ namespace STATIC {
 	namespace SYS
 	{
 
-		const double WIDTH = 1920.0;
-		const double HIGHT = 1080.0;
-		const double HALF_WIDTH = WIDTH / 2.0;
-		const double HALF_HIGHT = HIGHT / 2.0;
+		const float WIDTH = 1920.0;
+		const float HIGHT = 1080.0;
+		const float HALF_WIDTH = WIDTH / 2.0;
+		const float HALF_HIGHT = HIGHT / 2.0;
 
 	}
 }

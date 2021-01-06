@@ -11,6 +11,7 @@ RessourceManager::RessourceManager() {
 }
 
 RessourceManager::RessourceManager(const int& c) {
+    loaded = c;
 }
 
 
@@ -111,6 +112,7 @@ void RessourceManager::loadAllFont()
 }
 sf::Font& RessourceManager::getFont(const std::string& name)
 {
+    if (m_allFonts.count(name) == 0) std::cerr << "[RessourceManager::getFont] aucune police "+name+" trouvée !\n";
     return m_allFonts[name].second;
 }
 
@@ -124,7 +126,7 @@ void RessourceManager::loadLanguage(const std::string& path)
 {
     m_texts = O::str::convert_UTF8_string_to_SFML_string(file::getAllLines(path));
 }
-sf::String RessourceManager::text(const int& line)
+sf::String RessourceManager::getText(const int& line)
 {
     return m_texts[line];
 }

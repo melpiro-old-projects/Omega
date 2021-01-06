@@ -11,8 +11,8 @@ namespace graphics {
 	{
 	public:
 		Line();
-		Line(sf::RenderWindow* window, sf::Vector2f p1, sf::Vector2f p2, float width, float posRx = -1, float posRy = -1);
-		Line(sf::RenderWindow* window, sf::Vector2f p, float angle, float length, float width, float posRx = -1, float posRy = -1);
+		Line(sf::RenderWindow* window, sf::Vector2f p1, sf::Vector2f p2, float width, float posRx = 0, float posRy = 0);
+		Line(sf::RenderWindow* window, sf::Vector2f p, float angle, float length, float width, float posRx = 0, float posRy = 0);
 		
 		void event(sf::Event& e);
 

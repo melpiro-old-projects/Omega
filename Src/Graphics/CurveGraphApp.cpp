@@ -38,7 +38,7 @@ void CurveGraphApp::event()
 
 void CurveGraphApp::update()
 {
-	if (m_tempData.size() > 0) // si il y a un tampon
+	if (m_tempData.size() > 0 || m_tempDotData.size() > 0) // si il y a un tampon
 	{
 		updateAdd();
 	}
@@ -46,6 +46,8 @@ void CurveGraphApp::update()
 
 void CurveGraphApp::render()
 {
+	
+	m_mutex.lock();
 	m_fen.clear(sf::Color(19,19,19));
 
 	std::map<std::string, std::pair<std::pair<std::vector<sf::Vector2f>, std::vector<sf::RectangleShape>>, sf::Color>>::iterator it;
@@ -58,7 +60,15 @@ void CurveGraphApp::render()
 		}
 	}
 
+	for (auto it = m_allDot.begin(); it != m_allDot.end();it++)
+	{
+		m_fen.draw(it->second.second);
+	}
+
+
 	m_fen.display();
+	
+	m_mutex.unlock();
 }
 
 void CurveGraphApp::close()
@@ -82,11 +92,23 @@ void CurveGraphApp::addCourbe(std::string name, sf::Color couleur)
 
 void CurveGraphApp::addCourbe(std::string name, sf::Color couleur, double(*function)(double), double min, double max, double increment)
 {
+	m_mutex.lock();
 	addCourbe(name, couleur);
 	for (double i = min; i < max; i += increment)
 	{
 		addPoint(name, sf::Vector2f(i,function(i)));
 	}
+	m_mutex.unlock();
+}
+
+void CurveGraphApp::addDot(std::string name, sf::Vector2f coord, sf::Color couleur, float radius)
+{
+	m_mutex.lock();
+	m_tempDotData.push_back(std::make_pair(
+		std::make_pair(name, coord),
+		std::make_pair(couleur, radius)
+	));
+	m_mutex.unlock();
 }
 
 void CurveGraphApp::addPoint(std::string name, sf::Vector2f coord)
@@ -127,44 +149,67 @@ void CurveGraphApp::updateView()
 		maxY = 1;
 		minY = 0;
 	}
-	else
+	
+	
+	double sizeX = maxX - minX;
+	double sizeY = maxY - minY;
+
+	double dx = (800.0 - margin*2.0) / sizeX;
+	double dy = (650.0 - margin*2.0) / sizeY;
+
+	for (it = m_allCourbe.begin(); it != m_allCourbe.end(); it++)
 	{
-		double sizeX = maxX - minX;
-		double sizeY = maxY - minY;
-
-		double dx = (800.0 - margin*2.0) / sizeX;
-		double dy = (650.0 - margin*2.0) / sizeY;
-
-		for (it = m_allCourbe.begin(); it != m_allCourbe.end(); it++)
+		for (size_t i = 0; i < it->second.first.second.size(); i++)
 		{
-			for (size_t i = 0; i < it->second.first.second.size(); i++)
-			{
-				sf::Vector2f pos1((it->second.first.first[i].x - minX) * dx + margin, (it->second.first.first[i].y - minY) * dy + margin);
-				sf::Vector2f pos2((it->second.first.first[i + 1].x - minX) * dx + margin, (it->second.first.first[i + 1].y - minY) * dy + margin);
-				it->second.first.second[i].setPosition(pos1);
-				it->second.first.second[i].setSize(sf::Vector2f(math::getDistance((sf::Vector2f) pos1, (sf::Vector2f) pos2), WIDTH_LINE));
-				it->second.first.second[i].setRotation(math::ToDeg(math::getAngle((sf::Vector2f) pos1, (sf::Vector2f) pos2)));
-			}
+			sf::Vector2f pos1((it->second.first.first[i].x - minX) * dx + margin, (it->second.first.first[i].y - minY) * dy + margin);
+			sf::Vector2f pos2((it->second.first.first[i + 1].x - minX) * dx + margin, (it->second.first.first[i + 1].y - minY) * dy + margin);
+			it->second.first.second[i].setPosition(pos1);
+			it->second.first.second[i].setSize(sf::Vector2f(math::getDistance((sf::Vector2f) pos1, (sf::Vector2f) pos2), WIDTH_LINE));
+			it->second.first.second[i].setRotation(math::ToDeg(math::getAngle((sf::Vector2f) pos1, (sf::Vector2f) pos2)));
 		}
 	}
+	
+	for (auto it = m_allDot.begin(); it != m_allDot.end();it++)
+	{
+		sf::Vector2f pos((it->second.first.x - minX) * dx + margin, (it->second.first.y - minY) * dy + margin);
+		it->second.second.setPosition(pos);
+	}
+
+
+	
 
 }
 
 void CurveGraphApp::clear()
 {
+	m_mutex.lock();
 	m_allCourbe.clear();
 	m_tempData.clear();
+	m_tempDotData.clear();
+	m_allDot.clear();
+	m_mutex.unlock();
 }
 
 
 void CurveGraphApp::updateAdd()
 {
+	m_mutex.lock();
 	for (size_t i = 0; i < m_tempData.size(); i++)
 	{
 		updateAdd(m_tempData[i].first, m_tempData[i].second);
 	}
+	for (size_t i = 0; i < m_tempDotData.size(); i++)
+	{
+		updateAddDot(
+			m_tempDotData[i].first.first,
+			m_tempDotData[i].first.second,
+			m_tempDotData[i].second.first,
+			m_tempDotData[i].second.second);
+	}
 	m_tempData.clear();
+	m_tempDotData.clear();
 	updateView();
+	m_mutex.unlock();
 }
 
 void CurveGraphApp::updateAdd(std::string name, sf::Vector2f coord)
@@ -180,9 +225,21 @@ void CurveGraphApp::updateAdd(std::string name, sf::Vector2f coord)
 			sf::RectangleShape rectangle(sf::Vector2f(0, WIDTH_LINE));
 			rectangle.setFillColor(it->second.second);
 
-			it->second.first.second.push_back(rectangle);
+			it->second.first.second.emplace_back(rectangle);
 		}
 	}
+}
+void CurveGraphApp::updateAddDot(std::string name, sf::Vector2f coord, sf::Color couleur, float radius)
+{
+	coord.y = -coord.y;
+
+	sf::CircleShape c(radius);
+	c.setOrigin(radius, radius);
+	c.setFillColor(couleur);
+	m_allDot[name] = std::make_pair(
+		coord,
+		c
+	);	
 }
 
 }}

@@ -305,11 +305,11 @@ namespace vector {
 	template<typename T>
 	T getSum(std::vector<T> vector);
 	template<typename T,typename J>
-	void add(std::vector<T>& vector, J value);
+	void add(std::vector<T>& vector, const J& value);
 	template<typename T,typename J,typename I>
 	void add(std::vector<T>& vector, J value, I modulo);
 	template<typename T>
-	std::vector<T> add(const std::vector<T>& a, const std::vector<T>& b);
+	std::vector<T> addTwoVector(const std::vector<T>& a, const std::vector<T>& b);
 
 	template<typename T, typename T_, typename R, typename R_>
 	std::vector<R> applyFunction(const std::vector<T>& vec, R_ (*function)(T_));

@@ -25,6 +25,8 @@ public:
 	void addCourbe(std::string name, sf::Color couleur, double(*function)(double), double min, double max, double increment);
 	void addPoint(std::string name,sf::Vector2f coord);
 
+	void addDot(std::string name, sf::Vector2f coord, sf::Color couleur, float radius);
+
 	void clear();
 
 private:
@@ -35,6 +37,7 @@ private:
 
 	// l'ajout se fait dans un tampon updateAdd va donc prendre les �l�ment du tampon et les mettre dans la vraie liste
 	void updateAdd(std::string name, sf::Vector2f coord);
+	void updateAddDot(std::string name, sf::Vector2f coord, sf::Color couleur, float radius);
 	void updateAdd();
 
 	// update de l'affichage
@@ -47,9 +50,12 @@ private:
 	std::map<std::string,std::pair<std::pair<std::vector<sf::Vector2f>,std::vector<sf::RectangleShape>>, sf::Color>> m_allCourbe;
 
 	std::vector< std::pair<std::string, sf::Vector2f >> m_tempData;
-	
 
-	 
+	std::map<std::string, std::pair<sf::Vector2f, sf::CircleShape>> m_allDot;
+	
+	std::vector< std::pair<std::pair<std::string, sf::Vector2f >,std::pair<sf::Color, float>>> m_tempDotData;
+
+	sf::Mutex m_mutex;
 };
 }}
 

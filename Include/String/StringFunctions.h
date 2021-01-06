@@ -77,14 +77,14 @@ namespace str {
 std::string operator*(const std::string& str, const int& m);
 std::string operator*(const int& m, const std::string& str);
 
-std::string operator+(const std::string& str, const int& n);
-std::string operator+(const std::string& str, const double& n);
-std::string operator+(const std::string& str, const float& n);
-std::string operator+(const int& n, const std::string& str);
-std::string operator+(const double& n, const std::string& str);
-std::string operator+(const float& n, const std::string& str);
-void operator+=(std::string& str, const int& n);
-void operator+=(std::string& str, const double& n);
-void operator+=(std::string& str, const float& n);
+// std::string operator+(const std::string& str, const int& n);
+// std::string operator+(const std::string& str, const double& n);
+// std::string operator+(const std::string& str, const float& n);
+// std::string operator+(const int& n, const std::string& str);
+// std::string operator+(const double& n, const std::string& str);
+// std::string operator+(const float& n, const std::string& str);
+// void operator+=(std::string& str, const int& n);
+// void operator+=(std::string& str, const double& n);
+// void operator+=(std::string& str, const float& n);
 
 void operator*=(std::string& str, const int& m);

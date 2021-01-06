@@ -69,6 +69,8 @@ namespace math {
 	double dot(const sf::Vector2f& a, const sf::Vector2f& b);
 
 	std::function<double (double)> getDerivative(double (* function)(double));
+
+	sf::Vector2f compenseVector(sf::Vector2f v, double angleRad);
 	
 }
 }

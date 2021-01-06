@@ -20,7 +20,7 @@ namespace graphics {
 		m_hoverColor = sf::Color(255,255,255,150);
 		m_outlineBaseColor = sf::Color::White;
 		m_outlinehoverColor = sf::Color::White;
-		setOutlineThickness(1);
+		setOutlineThickness(0);
 		
 		updatePosText();
 

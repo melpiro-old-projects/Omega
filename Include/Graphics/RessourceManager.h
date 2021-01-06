@@ -1,12 +1,13 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
 #include <map>
 #include <iostream>
 #include <algorithm>
 #include "Files/FileFunctions.h"
 #include "String/EncodeFunction.h"
+
 
 namespace O{
 namespace graphics
@@ -41,7 +42,7 @@ public:
     RessourceManager(const int& c);
 
     void loadLanguage(const std::string& path);
-    sf::String text(const int& line);
+    sf::String getText(const int& line);
 
 
 private:
@@ -56,6 +57,8 @@ private:
     std::string m_defaultFontDir= ".";
 
     std::vector<sf::String> m_texts;
+
+    bool loaded = 0;
 };
 
 extern RessourceManager ressourceManager;

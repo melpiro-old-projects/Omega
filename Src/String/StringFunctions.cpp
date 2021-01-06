@@ -316,43 +316,43 @@ void operator*=(std::string& str, const int& m)
 	str = str * m;
 }
 
-std::string operator+(const std::string& str, const int& n)
-{
-	return str + O::str::to_string(n);
-}
-std::string operator+(const std::string& str, const double& n)
-{
-	return str + O::str::to_string(n);
-}
-std::string operator+(const std::string& str, const float& n)
-{
-	return str + O::str::to_string(n);
-}
-std::string operator+(const int& n, const std::string& str)
-{
-	return O::str::to_string(n) + str;
-}
-std::string operator+(const double& n, const std::string& str)
-{
-	return O::str::to_string(n) + str;
-}
-std::string operator+(const float& n, const std::string& str)
-{
-	return O::str::to_string(n) + str;
-}
+// std::string operator+(const std::string& str, const int& n)
+// {
+// 	return str + O::str::to_string(n);
+// }
+// std::string operator+(const std::string& str, const double& n)
+// {
+// 	return str + O::str::to_string(n);
+// }
+// std::string operator+(const std::string& str, const float& n)
+// {
+// 	return str + O::str::to_string(n);
+// }
+// std::string operator+(const int& n, const std::string& str)
+// {
+// 	return O::str::to_string(n) + str;
+// }
+// std::string operator+(const double& n, const std::string& str)
+// {
+// 	return O::str::to_string(n) + str;
+// }
+// std::string operator+(const float& n, const std::string& str)
+// {
+// 	return O::str::to_string(n) + str;
+// }
 
 
-void operator+=(std::string& str, const int& n)
-{
-	str = str + n; 
-}
-void operator+=(std::string& str, const double& n)
-{
-	str = str + n;
-}
-void operator+=(std::string& str, const float& n)
-{
-	str = str + n;
-}
+// void operator+=(std::string& str, const int& n)
+// {
+// 	str = str + n; 
+// }
+// void operator+=(std::string& str, const double& n)
+// {
+// 	str = str + n;
+// }
+// void operator+=(std::string& str, const float& n)
+// {
+// 	str = str + n;
+// }
 
 

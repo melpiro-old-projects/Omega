@@ -4,6 +4,7 @@
 #include "Math/Matrix.h"
 #include "SFML/System/Vector2.hpp"
 #include "Vector/VectorFunctions.h"
+#include "Operators/PrintFunctions.h"
 
 
 namespace O{

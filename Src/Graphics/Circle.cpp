@@ -10,14 +10,11 @@ namespace graphics {
 
 	Circle::Circle(sf::RenderWindow* window, float x, float y, float radius, float posRx, float posRy, bool centered) : 
 		m_circle(radius),
+		m_posRx(posRx), m_posRy(posRy),
 		m_x(x), m_y(y)
 	{
 		m_fen = window;
-
-		if (posRx == -1) m_posRx = x;
-		else m_posRx = posRx;
-		if (posRy == -1) m_posRy = y;
-		else m_posRy = posRy;
+		
 
 		m_baseColor = sf::Color::White;
 		m_hoverColor = sf::Color::White;
@@ -60,9 +57,7 @@ namespace graphics {
 		float factorY = (float)m_fen->getSize().y / STATIC::SYS::HIGHT;
 
 
-
 		m_circle.setPosition(m_x + (factorX - 1) * m_posRx, m_y + (factorY - 1) * m_posRy);
-
 	}
 
 

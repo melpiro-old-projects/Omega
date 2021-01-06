@@ -15,6 +15,7 @@ namespace graphics {
 		m_posRx(posRx), m_posRy(posRy),
 		m_isOrigineAsCenter(false)
 	{
+		
 		if (centered)
 		{
 			// si l'objet doit etre centr�, un appel � update n'est pas n�c�saire

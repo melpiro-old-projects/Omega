@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include "MathFunctions.h"
+#include <fstream>
 
 namespace O{
 namespace math{
@@ -17,6 +18,7 @@ public:
 
     void setValue(const size_t& line_index, const size_t& collumn_index, T value);
     T getValue(const size_t& line_index, const size_t& collumn_index) const { return m_matrix[line_index][collumn_index];}
+    std::vector<T> getLine(const size_t& line_index) const { return m_matrix[line_index];}
     size_t getNbCollumn() const { return nb_col; }
     size_t getNbLine() const  { return nb_line; }
 
@@ -66,7 +68,16 @@ Matrix<T> operator*(Matrix<T> const& a, Matrix<T> const& b);
 template <typename T>
 Matrix<T> operator*(Matrix<T> const& a, T const& b);
 template <typename T>
+Matrix<T> operator/(Matrix<T> const& a, T const& b);
+template <typename T>
+bool operator==(Matrix<T> const& a, Matrix<T> const& b);
+template <typename T>
 std::ostream& operator<<( std::ostream &flux, Matrix<T> const& m );
+
+template <typename T>
+std::ofstream& operator<<( std::ofstream &flux, Matrix<T> const& m );
+template <typename T>
+std::ifstream& operator>>( std::ifstream &flux, Matrix<T>& m);
 
 
 
@@ -106,6 +117,11 @@ template <typename T>
 Matrix<T> convertToLineMatrix(sf::Vector3<T> const& vector);
 template <typename T>
 Matrix<T> convertToColMatrix(sf::Vector3<T> const& vector);
+
+template <typename T>
+Matrix<T> convertToColMatrix(std::vector<T> const& vector);
+template <typename T>
+Matrix<T> convertColMatrixToVector(Matrix<T> const& mat);
 
 template <typename T>
 sf::Vector3<T> convertToVector3(Matrix<T> const& mat);

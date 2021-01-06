@@ -116,7 +116,7 @@ namespace graphics {
 
 		///////////////////////////////////////////////////////////////:
 		// origine as center
-		bool m_isOrigineAsCenter;
+		bool m_isOrigineAsCenter = false;
 	};
 }}
 
