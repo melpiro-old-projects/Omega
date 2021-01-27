@@ -38,6 +38,33 @@ namespace math {
 		};
 	}
 
+	int hex_to_decimal(char const& hex)
+	{
+		if (hex >= '0' && hex <= '9')
+			return hex - '0';
+		else if  (hex >= 'A' && hex <= 'F')
+			return hex - 'A' + 10;
+		else if  (hex >= 'a' && hex <= 'f')
+			return hex - 'a' + 10;
+		
+		return 0;
+	}
+
+	int hex_to_decimal(std::string const& hex)
+	{
+		int res = 0;
+		int pow = 1;
+		for (int i = 0; i < hex.size(); i++)
+		{
+			char c = hex[hex.size() - 1 - i];
+			res += hex_to_decimal(c) * pow;
+			if (i + 1<= hex.size())
+				pow *= 16;
+		}
+		return res;
+	}
+
+
 
 }
 }

@@ -71,6 +71,9 @@ namespace math {
 	std::function<double (double)> getDerivative(double (* function)(double));
 
 	sf::Vector2f compenseVector(sf::Vector2f v, double angleRad);
+
+	int hex_to_decimal(std::string const& hex);
+	int hex_to_decimal(char const& hex);
 	
 }
 }

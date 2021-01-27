@@ -83,6 +83,10 @@ namespace graphics {
 
 	void Text::draw()
 	{
+		if (m_text.getFont() == NULL)
+		{
+			loadFont();
+		}
 		m_fen->draw(m_text);
 	}
 	sf::Text& Text::gT()

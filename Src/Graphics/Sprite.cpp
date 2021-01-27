@@ -97,11 +97,19 @@ namespace graphics {
 
 	void Sprite::draw()
 	{
+		if (m_sprite.getTexture() == NULL)
+		{
+			loadTexture();
+		}
 		m_fen->draw(m_sprite);
 	}
 
 	void Sprite::draw(sf::FloatRect bound)
 	{
+		if (m_sprite.getTexture() == NULL)
+		{
+			loadTexture();
+		}
 		if (bound.intersects(m_sprite.getGlobalBounds()))
 		{
 			m_fen->draw(m_sprite);

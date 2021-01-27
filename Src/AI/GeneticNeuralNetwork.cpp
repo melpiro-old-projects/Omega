@@ -125,6 +125,76 @@ std::vector<long double> GeneticNeuralNetwork::getOutput(std::vector<long double
     return res;
 }
 
+
+std::vector<double> GeneticNeuralNetwork::getOutput(std::vector<double> input)
+{
+    for (size_t i = 0; i < m_allNeurons.size(); i++)
+    {
+        for (size_t j = 0; j < m_allNeurons[i].size(); j++)
+        {
+            m_allNeurons[i][j].activation = 0;
+            m_allNeurons[i][j].agregation = 0;
+        }
+    }
+    
+    for (size_t i = 0; i < m_allNeurons.size(); i++)
+    {
+        for (size_t j = 0; j < m_allNeurons[i].size(); j++)
+        {
+            if (i == 0)
+                m_allNeurons[i][j].activation = input[j];
+            else
+            {
+                
+                m_allNeurons[i][j].activation = 
+                    m_allNeurons[i][j].activationFunction
+                    (
+                        m_allNeurons[i][j].agregation 
+                        +
+                        m_allNeurons[i][j].biais
+                    );
+            }
+            
+
+            for (size_t k = 0; k < m_allNeurons[i][j].out.size(); k++)
+            {
+                if (m_allNeurons[i][j].out[k].first >= m_allNeurons.size())
+                {
+                    std::cout << "layer "<< i <<"neuron "<< j <<" got to layer "<< m_allNeurons[i][j].out[k].first  <<std::endl;
+                    std::cout << "ALERT ! ALERT ERROR 1 /!\\" <<std::endl;
+                }
+                else if (m_allNeurons[i][j].out[k].second >= m_allNeurons[m_allNeurons[i][j].out[k].first].size())
+                {
+                    std::cout << getLayersStructure() <<std::endl;
+                    std::cout << "from layer "<< i <<std::endl;
+                    std::cout << "from neuron " << j <<std::endl;
+                    std::cout << "targeted layer : "<<m_allNeurons[i][j].out[k].first <<std::endl;
+                    std::cout << "targeted neuron : "<<m_allNeurons[i][j].out[k].second <<std::endl;
+                    std::cout << "but targeted layer size : "<< m_allNeurons[m_allNeurons[i][j].out[k].first].size()<<std::endl;
+                    std::cout << "ALERT ! ALERT ERROR 2 /!\\" <<std::endl;
+
+                    int i;
+                    std::cin >> i;
+                }
+                else
+                {
+                    m_allNeurons[m_allNeurons[i][j].out[k].first][m_allNeurons[i][j].out[k].second].agregation 
+                        += m_allNeurons[i][j].activation * m_allNeurons[i][j].out[k].third;
+                }
+                
+                
+            }
+        }
+    }
+    
+    std::vector<double> res;
+    for (size_t i = 0; i < m_allNeurons.back().size(); i++)
+    {
+        res.push_back(m_allNeurons.back()[i].activation);
+    }
+    return res;
+}
+
 ///////////////////////////////////////////////////////////////
 // getters
 ///////////////////////////////////////////////////////////////
@@ -228,6 +298,44 @@ O::data::triplet<int, int, int> GeneticNeuralNetwork::getRdmConnextionByIndex()
         O::math::rdm::randInt(0,m_allNeurons[layerFrom][neuronFrom].out.size()));
 }
 
+
+O::data::triplet<int, int, int> GeneticNeuralNetwork::getRdmConnextionByIndex(const int& minfromLayer)
+{
+    if(!m_haveConnexion)
+    {
+        return O::data::make_triplet(-1,-1,-1);
+    }
+    int layerFrom;
+    int neuronFrom;
+
+    int nb = 10;
+    do
+    {
+
+        int nb2 = 10;
+        do
+        {
+            layerFrom = O::math::rdm::randInt(0, m_allNeurons.size());
+            nb2--;
+        } while (nb2 >= 0 && (m_allNeurons[layerFrom].size() == 0 || layerFrom < minfromLayer));
+
+
+        neuronFrom = O::math::rdm::randInt(0, m_allNeurons[layerFrom].size());
+
+        nb--;
+    } while (nb >= 0 && m_allNeurons[layerFrom][neuronFrom].out.size() == 0);
+
+    if (nb < 0)
+    {
+        return O::data::make_triplet(-1,-1,-1);
+    }
+
+    return O::data::make_triplet(
+        layerFrom,
+        neuronFrom,
+        O::math::rdm::randInt(0,m_allNeurons[layerFrom][neuronFrom].out.size()));
+}
+
 ///////////////////////////////////////////////////////////////
 // mutation
 ///////////////////////////////////////////////////////////////
@@ -312,6 +420,17 @@ void GeneticNeuralNetwork::mutateBiais(const double& pourcent, const long double
                 m_allNeurons[i][j].biais += O::math::rdm::randDouble(-delta, delta);
         }
         
+    }
+}
+void GeneticNeuralNetwork::mutateBiais(const double& pourcent,const int& layerMin, const long double& min, const long double& max)
+{
+    for (size_t i = layerMin; i < m_allNeurons.size(); i++)
+    {
+        for (size_t j = 0; j < m_allNeurons[i].size(); j++)
+        {
+            if (O::math::rdm::randFloat(0, 100) < pourcent)
+                m_allNeurons[i][j].biais = O::math::rdm::randDouble(min, max);
+        }
     }
 }
 bool GeneticNeuralNetwork::mutateAddConnection(const double& minW, const double& maxW)
@@ -417,6 +536,17 @@ void GeneticNeuralNetwork::mutateAddConectedLayer(const int& nbNeurons, const in
 bool GeneticNeuralNetwork::mutateRemoveConnection()
 {
     auto transition = this->getRdmConnextionByIndex();
+    if(transition.first != -1)
+    {
+        return removeConnexion(transition.first, transition.second, transition.third);
+    }
+    return false;
+}
+
+
+bool GeneticNeuralNetwork::mutateRemoveConnection(const int& minLayer)
+{
+    auto transition = this->getRdmConnextionByIndex(minLayer);
     if(transition.first != -1)
     {
         return removeConnexion(transition.first, transition.second, transition.third);
@@ -664,7 +794,6 @@ bool GeneticNeuralNetwork::removeConnexion(int layerIndexFrom, int neuronIndexFr
             m_allNeurons[layerIndexFrom][neuronIndexFrom].out.erase(m_allNeurons[layerIndexFrom][neuronIndexFrom].out.begin() + i);
             return true;
         }
-
     }
     return false;
 }
@@ -684,12 +813,29 @@ bool GeneticNeuralNetwork::removeConnexion(int layerIndexFrom, int neuronIndexFr
     }
     if(outIndex >= m_allNeurons[layerIndexFrom][neuronIndexFrom].out.size())
     {
-        std::cerr<< "[O::AI::GeneticNeuralNetwork::removeConnexion] outIndex invalides "<<std::endl;
+        std::cerr << "[O::AI::GeneticNeuralNetwork::removeConnexion] outIndex invalides "<<std::endl;
         return false;
     }
 
     m_allNeurons[layerIndexFrom][neuronIndexFrom].out.erase(m_allNeurons[layerIndexFrom][neuronIndexFrom].out.begin() + outIndex);
     return true;
+}
+
+
+void GeneticNeuralNetwork::removeConnexionsFromLayer(int layerIndexFrom)
+{
+    for (size_t i = 0; i < m_allNeurons[layerIndexFrom].size(); i++)
+    {
+        m_allNeurons[layerIndexFrom][i].out.clear();
+    }
+}
+
+void GeneticNeuralNetwork::setBiaisOfLayer(int layerIndexFrom, long double biais)
+{
+    for (size_t i = 0; i < m_allNeurons[layerIndexFrom].size(); i++)
+    {
+        m_allNeurons[layerIndexFrom][i].biais = biais;
+    }
 }
 
 void GeneticNeuralNetwork::removeNeuron(int layer, int index)
@@ -857,6 +1003,11 @@ std::pair<int,int> GeneticNeuralNetwork::splitTransition(int layerIndexFrom, int
         }
     }
     return std::make_pair(-1,-1);
+}
+
+void GeneticNeuralNetwork::setBiais(int layer, int index, long double b)
+{
+    m_allNeurons[layer][index].biais = b;
 }
 
 

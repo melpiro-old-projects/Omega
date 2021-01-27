@@ -39,6 +39,7 @@ public:
 
     //base
     std::vector<long double> getOutput(std::vector<long double> input);
+    std::vector<double> getOutput(std::vector<double> input);
     
     // geteurs
     int getLayerSize(int layer);
@@ -47,6 +48,7 @@ public:
     bool haveConnexion(int layerIndexFrom, int neuronIndexFrom, int layerIndexTo, int neuronIndexTo);
     std::pair<std::pair<int,int>,std::pair<int,int>> getRdmConnextion();
     O::data::triplet<int, int, int> getRdmConnextionByIndex();
+    O::data::triplet<int, int, int> getRdmConnextionByIndex(const int& minfromLayer);
     long double getMaxWeightAbs();
     long double getMaxBiaisAbs();
 
@@ -55,10 +57,12 @@ public:
     void mutateBiais(const double& pourcent, const long double& min, const long double& max);
     void mutateWeight(const double& pourcent, const long double& delta);
     void mutateBiais(const double& pourcent, const long double& delta);
+    void mutateBiais(const double& pourcent,const int& layerMin, const long double& min, const long double& max);
     bool mutateAddConnection(const double& minW, const double& maxW);
     bool mutateAddConnectedNeuron(const int& nbInputConnexion, const int& nbOutputConnexion, long double(*activationFunction)(long double) ,const double& minB, const double& maxB, const double& minW, const double& maxW);
     void mutateAddConectedLayer(const int& nbNeurons, const int& nbInputConnexion, const int& nbOutputConnexion, long double(*activationFunction)(long double) ,const double& minB, const double& maxB, const double& minW, const double& maxW);
     bool mutateRemoveConnection();
+    bool mutateRemoveConnection(const int& minfromLayer);
     bool mutateMoveConnectionInput();
     bool mutateMoveConnectionOutput();
     bool mutateDuplicateConnectionOutput();
@@ -71,6 +75,8 @@ public:
     void addLayer(int index);
     bool removeConnexion(int layerIndexFrom, int neuronIndexFrom, int layerIndexTo, int neuronIndexTo);
     bool removeConnexion(int layerIndexFrom, int neuronIndexFrom, int outIndex);
+    void removeConnexionsFromLayer(int layerIndexFrom);
+    void setBiaisOfLayer(int layerIndexFrom, long double biais);
     void removeNeuron(int layer, int index);
     void removeLayer(int layer);
     std::pair<int,int> splitTransition(int layerIndexFrom, int neuronIndexFrom, int layerIndexTo, int neuronIndexTo, long double (*activationFunction)(long double));
