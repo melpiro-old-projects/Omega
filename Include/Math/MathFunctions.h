@@ -20,6 +20,15 @@ namespace math {
 	double getDistanceCarre(const sf::Vector2<T>& origine, const sf::Vector2<T>& destination);
 
 	template<typename T>
+	double getDistance(const sf::Vector3<T>& origine, const sf::Vector3<T>& destination);
+
+	template<typename T>
+	double getDistance(const sf::Vector3<T>& origine);
+
+	template<typename T>
+	double getDistanceCarre(const sf::Vector3<T>& origine, const sf::Vector3<T>& destination);
+
+	template<typename T>
 	double getDistance(const T& ax, const T& ay, const T& bx, const T& by);
 	
 	template<typename T>
@@ -67,6 +76,7 @@ namespace math {
 
 	sf::Vector2f normalise(const sf::Vector2f& vec);
 	double dot(const sf::Vector2f& a, const sf::Vector2f& b);
+	double dot(const sf::Vector3f& a, const sf::Vector3f& b);
 
 	std::function<double (double)> getDerivative(double (* function)(double));
 

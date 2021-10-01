@@ -22,6 +22,23 @@ namespace O{
 			return getDistanceCarre(origine.x,origine.y,destination.x,destination.y);
 		}
 		template<typename T>
+		double getDistance(const sf::Vector3<T>& origine, const sf::Vector3<T>& destination)
+		{
+			return sqrt(getDistanceCarre(origine, destination));
+		}
+		
+		template<typename T>
+		double getDistance(const sf::Vector3<T>& origine)
+		{
+			return sqrt(origine.x * origine.x + origine.y * origine.y + origine.z * origine.z);
+		}
+		template<typename T>
+		double getDistanceCarre(const sf::Vector3<T>& origine, const sf::Vector3<T>& destination)
+		{
+			sf::Vector3<T> vec = destination - origine;
+			return vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
+		}
+		template<typename T>
 		double getDistance(const T& ax, const T& ay, const T& bx, const T& by)
 		{
 			return sqrt(getDistanceCarre(ax,ay,bx,by));

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/System.hpp>
+#include <SFML/System/String.hpp>
 #include <vector>
 
 namespace O{

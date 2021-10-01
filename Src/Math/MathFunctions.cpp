@@ -30,6 +30,11 @@ namespace math {
 	{
 		return a.x * b.x + a.y * b.y;
 	}
+	double dot(const sf::Vector3f& a, const sf::Vector3f& b)
+	{
+		return a.x * b.x + a.y * b.y + a.z * b.z;
+	}
+
 
 	std::function<double (double)> getDerivative(double (* function)(double))
 	{

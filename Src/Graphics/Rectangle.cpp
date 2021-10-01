@@ -50,7 +50,6 @@ namespace graphics {
 	{
 		float factorX = (float)m_fen->getSize().x / STATIC::SYS::WIDTH;
 		float factorY = (float)m_fen->getSize().y / STATIC::SYS::HIGHT;
-
 		m_rectangle.setPosition(m_x + (factorX - 1) * m_posRx, m_y + (factorY - 1) * m_posRy);
 	}
 
@@ -71,6 +70,7 @@ namespace graphics {
 	{
 		m_x = x;
 		m_y = y;
+		Rectangle::update();
 	}
 	void Rectangle::setPosition(float x, float y, bool update)
 	{
